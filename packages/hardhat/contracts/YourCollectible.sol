@@ -53,6 +53,13 @@ uint256 public randomResultLuck;
   // luck
   mapping (bytes32 => uint8) public tokenLuck;
 
+    function expand(uint256 randomValue, uint256 n) public pure returns (uint256[] memory expandedValues) {
+        expandedValues = new uint256[](n);
+        for (uint256 i = 0; i < n; i++) {
+            expandedValues[i] = uint256(keccak256(abi.encode(randomValue, i)));
+        }
+        return expandedValues;
+    }
 
    /** 
     * Requests randomness from a user-provided seed
@@ -66,7 +73,12 @@ uint256 public randomResultLuck;
      * Callback function used by VRF Coordinator
      */
     function fulfillRandomness(bytes32 requestId, uint256 randomness) internal override {
-        randomResult = randomness;
+        uint256[] memory randomNumbers = expand(randomness, 5);
+        randomResultStrength = randomNumbers[0];
+        randomResultIntelligence = randomNumbers[1];
+        randomResultEndurance = randomNumbers[2];
+        randomResultCharisma = randomNumbers[3];
+        randomResultLuck= randomNumbers[4];
     }
 
   function mintItem(string memory tokenURI)
@@ -80,11 +92,16 @@ uint256 public randomResultLuck;
       forSale[uriHash]=false;
 
       tokenStrength[uriHash] = uint8((randomResultStrength % 100) + 1);
-      tokenIntelligence[uriHash] = uint8((randomIntelligence % 100) + 1);
-      tokenEndurance[uriHash] = uint8((randomEndurance % 100) + 1);
-      tokenCharisma[uriHash] = uint8((randomCharisma % 100) + 1);
+      tokenIntelligence[uriHash] = uint8((randomResultIntelligence % 100) + 1);
+      tokenEndurance[uriHash] = uint8((randomResultEndurance % 100) + 1);
+      tokenCharisma[uriHash] = uint8((randomResultCharisma % 100) + 1);
       tokenLuck[uriHash] = uint8((randomResultLuck % 100) + 1);
-      randomResult = 0;
+
+      randomResultStrength = 0;
+      randomResultIntelligence = 0;
+      randomResultEndurance = 0;
+      randomResultCharisma = 0;
+      randomResultLuck = 0;
 
       _tokenIds.increment();
 
