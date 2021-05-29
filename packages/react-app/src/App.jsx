@@ -416,7 +416,7 @@ function App(props) {
               tx(writeContracts.YourCollectible.mintItem(loadedAssets[a].id, { gasPrice }));
             }}
           >
-            Mint
+            Resurrect
           </Button>
         </div>,
       );

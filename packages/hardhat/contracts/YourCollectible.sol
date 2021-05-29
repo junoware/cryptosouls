@@ -12,14 +12,14 @@ import "@chainlink/contracts/src/v0.6/VRFConsumerBase.sol";
 
 contract YourCollectible is ERC721, VRFConsumerBase {
 
-bytes32 internal keyHash;
-uint256 internal fee;
+  bytes32 internal keyHash;
+  uint256 internal fee;
 
-uint256 public randomResultStrength;
-uint256 public randomResultIntelligence;
-uint256 public randomResultEndurance;
-uint256 public randomResultCharisma;
-uint256 public randomResultLuck;
+  uint256 public randomResultStrength;
+  uint256 public randomResultIntelligence;
+  uint256 public randomResultEndurance;
+  uint256 public randomResultCharisma;
+  uint256 public randomResultLuck;
 
   using Counters for Counters.Counter;
   Counters.Counter private _tokenIds;
