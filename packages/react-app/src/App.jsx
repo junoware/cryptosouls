@@ -536,7 +536,14 @@ function App(props) {
                 this <Contract/> component will automatically parse your ABI
                 and give you a form to interact with it locally
             */}
-
+            <div style={{ margin: "auto", marginTop: "20px", width: "40%" }}>
+              <div>
+                Resurrect the souls of powerful warriors as NFT's and duel your opponents. Minted warriors are given
+                provably-random stats (1-100) in Strength, Intelligence, Endurance, Charisma and Luck. Once per day,
+                warriors can compete in best-of-three stat matchups against a randomly-chosen opponent. The warrior with
+                the higher stat wins, and <b>the winner gets the other player's NFT!</b>
+              </div>
+            </div>
             <div style={{ maxWidth: 820, margin: "auto", marginTop: 32, paddingBottom: 256 }}>
               <StackGrid columnWidth={200} gutterWidth={16} gutterHeight={16}>
                 {galleryList}

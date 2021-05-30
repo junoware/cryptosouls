@@ -39,8 +39,6 @@ contract YourCollectible is ERC721, VRFConsumerBase {
 
   //this marks an item in IPFS as "forsale"
   mapping (bytes32 => bool) public forSale;
-  //this is for the roster of warriors ready to battle!
-  mapping (bytes32 => bool) public forBattle;
 
   //this lets you look up a token by the uri (assuming there is only one of each uri for now)
   mapping (bytes32 => uint256) public uriToTokenId;
@@ -56,6 +54,8 @@ contract YourCollectible is ERC721, VRFConsumerBase {
   // luck
   mapping (bytes32 => uint8) public tokenLuck;
 
+  uint256[] public tokenIdsForBattle;
+  
     function expand(uint256 randomValue, uint256 n) public pure returns (uint256[] memory expandedValues) {
         expandedValues = new uint256[](n);
         for (uint256 i = 0; i < n; i++) {
@@ -87,9 +87,40 @@ contract YourCollectible is ERC721, VRFConsumerBase {
     /**
      * Put the token on the battle list!
      */
-    function enlistForBattle(string memory tokenURI) public {  
-      bytes32 uriHash = keccak256(abi.encodePacked(tokenURI));
-      forBattle[uriHash] = true;
+    function enlistForBattle(uint256 tokenId) public {  
+      bool inBattleArray = false;
+      for (uint j = 0; j < tokenIdsForBattle.length; j++) {
+        if (tokenIdsForBattle[j] == tokenId) {
+          inBattleArray = true;
+        }
+      }
+      if (!inBattleArray) {
+        tokenIdsForBattle.push(tokenId);
+      }
+    }
+
+    /**
+     * Start the battle
+     */
+    function startBattling() public {  
+      for (uint j = 0; j < tokenIdsForBattle.length; j+=2) {
+        string memory firstTokenURI = tokenURI(tokenIdsForBattle[j]);
+        bytes32  firstURIHash = keccak256(abi.encodePacked(firstTokenURI));
+        string memory secondTokenURI = tokenURI(tokenIdsForBattle[j+1]);
+        bytes32 secondURIHash = keccak256(abi.encodePacked(secondTokenURI));
+        if (tokenStrength[firstURIHash] > tokenStrength[secondURIHash]) {
+          ownerMapping[secondURIHash] = ownerOf(tokenIdsForBattle[j+1]);
+        }
+        else if (tokenStrength[firstURIHash] < tokenStrength[secondURIHash]) {
+          ownerMapping[firstURIHash] = ownerOf(tokenIdsForBattle[j]);
+        }
+      }
+      // randomly pair NFT's with each other
+      // randomly select one of the 5 skills
+      // compare them and award the winner to be the higher
+
+      // after all battles have taken place, delete array
+      delete tokenIdsForBattle;
     }
 
   function mintItem(string memory tokenURI)
@@ -101,7 +132,6 @@ contract YourCollectible is ERC721, VRFConsumerBase {
       //make sure they are only minting something that is marked "forsale"
       require(forSale[uriHash],"NOT FOR SALE");
       forSale[uriHash]=false;
-      forBattle[uriHash] = false;
 
       tokenStrength[uriHash] = uint8((randomResultStrength % 100) + 1);
       tokenIntelligence[uriHash] = uint8((randomResultIntelligence % 100) + 1);
