@@ -538,10 +538,12 @@ function App(props) {
             */}
             <div style={{ margin: "auto", marginTop: "20px", width: "40%" }}>
               <div>
-                Resurrect the souls of powerful warriors as NFT's and duel your opponents. Minted warriors are given
+                Resurrect the souls of powerful warriors as NFT's and duel your opponents! Minted warriors are given
                 provably-random stats (1-100) in Strength, Intelligence, Endurance, Charisma and Luck. Once per day,
-                warriors can compete in best-of-three stat matchups against a randomly-chosen opponent. The warrior with
-                the higher stat wins, and <b>the winner gets the other player's NFT!</b>
+                warriors can compete in best-of-three random stat matchups against one randomly-chosen opponent.
+              </div>
+              <div style={{ marginTop: "20px" }}>
+                <h2>The winner gets the other player's NFT!</h2>
               </div>
             </div>
             <div style={{ maxWidth: 820, margin: "auto", marginTop: 32, paddingBottom: 256 }}>

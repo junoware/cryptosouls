@@ -108,12 +108,12 @@ contract YourCollectible is ERC721, VRFConsumerBase {
         bytes32  firstURIHash = keccak256(abi.encodePacked(firstTokenURI));
         string memory secondTokenURI = tokenURI(tokenIdsForBattle[j+1]);
         bytes32 secondURIHash = keccak256(abi.encodePacked(secondTokenURI));
+        /*
         if (tokenStrength[firstURIHash] > tokenStrength[secondURIHash]) {
-          ownerMapping[secondURIHash] = ownerOf(tokenIdsForBattle[j+1]);
         }
         else if (tokenStrength[firstURIHash] < tokenStrength[secondURIHash]) {
-          ownerMapping[firstURIHash] = ownerOf(tokenIdsForBattle[j]);
         }
+        */
       }
       // randomly pair NFT's with each other
       // randomly select one of the 5 skills
