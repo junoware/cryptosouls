@@ -139,6 +139,29 @@
     "inputs": [
       {
         "internalType": "uint256",
+        "name": "warrior1TokenId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "warrior2TokenId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256[3]",
+        "name": "statMatchups",
+        "type": "uint256[3]"
+      }
+    ],
+    "name": "battle",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
         "name": "tokenId",
         "type": "uint256"
       }
@@ -452,13 +475,6 @@
       }
     ],
     "name": "setApprovalForAll",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "startBattling",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

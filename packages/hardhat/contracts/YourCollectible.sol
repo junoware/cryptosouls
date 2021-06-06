@@ -12,6 +12,9 @@ import "@chainlink/contracts/src/v0.6/VRFConsumerBase.sol";
 
 contract YourCollectible is ERC721, VRFConsumerBase {
 
+  enum ContractState { READY, BATTLEWAIT, MINTWAIT }
+  ContractState internal currentState;
+
   bytes32 internal keyHash;
   uint256 internal fee;
 
@@ -28,7 +31,7 @@ contract YourCollectible is ERC721, VRFConsumerBase {
     VRFConsumerBase(
       0xb3dCcb4Cf7a26f6cf6B120Cf5A73875B7BBc655B, // VRF Coordinator
       0x01BE23585060835E02B77ef475b0Cc51aA1e0709  // LINK Token
-    ) ERC721("YourCollectible", "YCB") {  
+    ) ERC721("CryptoSouls", "CSL") {  
     _setBaseURI("https://ipfs.io/ipfs/");
     for(uint256 i=0;i<assetsForSale.length;i++){
       forSale[assetsForSale[i]] = true;
@@ -76,12 +79,61 @@ contract YourCollectible is ERC721, VRFConsumerBase {
      * Callback function used by VRF Coordinator
      */
     function fulfillRandomness(bytes32 requestId, uint256 randomness) internal override {
+      if (currentState == ContractState.MINTWAIT) {
         uint256[] memory randomNumbers = expand(randomness, 5);
         randomResultStrength = randomNumbers[0];
         randomResultIntelligence = randomNumbers[1];
         randomResultEndurance = randomNumbers[2];
         randomResultCharisma = randomNumbers[3];
         randomResultLuck= randomNumbers[4];
+      }
+      else if (currentState == ContractState.BATTLEWAIT) {
+        uint256[] memory randomNumbers = expand(randomness, tokenIdsForBattle.length);
+        uint randomNumbersLength = randomNumbers.length;
+        uint256[3] memory randomStatIndexes = [randomNumbers[randomNumbersLength-1] % 5, randomNumbers[randomNumbersLength-2] % 5, randomNumbers[randomNumbersLength-3] % 5];
+        for (uint i = 0; i < tokenIdsForBattle.length; i+2) {
+          if (tokenIdsForBattle.length > i+1)
+            battle(tokenIdsForBattle[i], tokenIdsForBattle[i+1], randomStatIndexes);
+        }
+        delete tokenIdsForBattle;
+        currentState = ContractState.READY;
+      }
+    }
+
+    function battle(uint256 warrior1TokenId, uint256 warrior2TokenId, uint256[3] memory statMatchups) public {
+        // get stats for each warrior
+        string memory firstTokenURI = tokenURI(warrior1TokenId);
+        bytes32 firstURIHash = keccak256(abi.encodePacked(firstTokenURI));
+        string memory secondTokenURI = tokenURI(warrior2TokenId);
+        bytes32 secondURIHash = keccak256(abi.encodePacked(secondTokenURI));
+        // run a for-loop where we compare different stats against each other
+        string memory result;
+        for (uint i = 0; i < statMatchups.length; i++) {
+          if (statMatchups[i] == 0) {
+            result = compareStat(tokenStrength[firstURIHash],tokenStrength[secondURIHash]);
+          }
+          else if (statMatchups[i] == 1) {
+            result = compareStat(tokenIntelligence[firstURIHash],tokenIntelligence[secondURIHash]);
+          }
+          else if (statMatchups[i] == 2) {
+            result = compareStat(tokenEndurance[firstURIHash],tokenEndurance[secondURIHash]);
+          }
+          else if (statMatchups[i] == 3) {
+            result = compareStat(tokenCharisma[firstURIHash],tokenCharisma[secondURIHash]);
+          }
+          else if (statMatchups[i] == 4) {
+            result = compareStat(tokenLuck[firstURIHash],tokenLuck[secondURIHash]);
+          }
+        }
+    }
+
+    function compareStat(uint256 warrior1Stat, uint256 warrior2Stat) internal returns (string memory result) {
+      if (warrior1Stat > warrior2Stat)
+        return "warrior1";
+      else if (warrior1Stat < warrior2Stat)
+        return "warrior2";
+      else 
+        return "tie";
     }
 
     /**
@@ -99,29 +151,6 @@ contract YourCollectible is ERC721, VRFConsumerBase {
       }
     }
 
-    /**
-     * Start the battle
-     */
-    function startBattling() public {  
-      for (uint j = 0; j < tokenIdsForBattle.length; j+=2) {
-        string memory firstTokenURI = tokenURI(tokenIdsForBattle[j]);
-        bytes32  firstURIHash = keccak256(abi.encodePacked(firstTokenURI));
-        string memory secondTokenURI = tokenURI(tokenIdsForBattle[j+1]);
-        bytes32 secondURIHash = keccak256(abi.encodePacked(secondTokenURI));
-        /*
-        if (tokenStrength[firstURIHash] > tokenStrength[secondURIHash]) {
-        }
-        else if (tokenStrength[firstURIHash] < tokenStrength[secondURIHash]) {
-        }
-        */
-      }
-      // randomly pair NFT's with each other
-      // randomly select one of the 5 skills
-      // compare them and award the winner to be the higher
-
-      // after all battles have taken place, delete array
-      delete tokenIdsForBattle;
-    }
 
   function mintItem(string memory tokenURI)
       public
