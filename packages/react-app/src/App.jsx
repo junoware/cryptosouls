@@ -413,7 +413,9 @@ function App(props) {
           <Button
             onClick={() => {
               console.log("gasPrice,", gasPrice);
-              tx(writeContracts.YourCollectible.mintItem(loadedAssets[a].id, { gasPrice }));
+              // tx(writeContracts.YourCollectible.mintItem(loadedAssets[a].id, { gasPrice }));
+              // tx(writeContracts.YourCollectible.startMintingItem(loadedAssets[a].id, { gasPrice }));
+              tx(writeContracts.YourCollectible.createCollectible(loadedAssets[a].id, { gasPrice }));
             }}
           >
             Resurrect
