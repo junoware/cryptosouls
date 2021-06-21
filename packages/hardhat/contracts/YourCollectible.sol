@@ -53,7 +53,7 @@ contract YourCollectible is ERC721, VRFConsumerBase {
 
     mapping(address => uint256) public randomNums;
     //this lets you look up a token by the uri (assuming there is only one of each uri for now)
-    mapping(bytes32 => uint256) public uriToTokenId;
+    // mapping(bytes32 => uint256) public uriToTokenId;
 
     // strength
     mapping(uint256 => uint8) public tokenIdToStrength;
@@ -81,7 +81,7 @@ contract YourCollectible is ERC721, VRFConsumerBase {
     }
 
     /**
-     * Requests randomness from a user-provided seed
+     * Requests randomness from sender address seed
      */
     function createCollectible(string memory tokenURI)
         public
@@ -108,19 +108,7 @@ contract YourCollectible is ERC721, VRFConsumerBase {
         address owner = requestIdToSender[requestId];
         string memory tokenURI = requestIdToTokenURI[requestId];
 
-        bytes32 uriHash = keccak256(abi.encodePacked(tokenURI));
-
-        //make sure they are only minting something that is marked "forsale"
-        require(forSale[uriHash], "NOT FOR SALE");
-        forSale[uriHash] = false;
-
         uint256 newItemId = tokenCounter;
-        _safeMint(owner, newItemId);
-        _setTokenURI(newItemId, tokenURI);
-
-        requestIdToTokenId[requestId] = newItemId;
-        tokenCounter++;
-
         uint256[] memory randomNumbers = expand(randomness, 5);
         tokenIdToStrength[newItemId] = uint8((randomNumbers[0] % 100) + 1);
         tokenIdToIntelligence[newItemId] = uint8((randomNumbers[1] % 100) + 1);
@@ -128,11 +116,17 @@ contract YourCollectible is ERC721, VRFConsumerBase {
         tokenIdToCharisma[newItemId] = uint8((randomNumbers[3] % 100) + 1);
         tokenIdToLuck[newItemId] = uint8((randomNumbers[4] % 100) + 1);
 
-        /*
-        _tokenIds.increment();
-        uriToTokenId[uriHash] = id;
-        */
-        // }
+        bytes32 uriHash = keccak256(abi.encodePacked(tokenURI));
+
+        //make sure they are only minting something that is marked "forsale"
+        require(forSale[uriHash], "NOT FOR SALE");
+        forSale[uriHash] = false;
+
+        _safeMint(owner, newItemId);
+        _setTokenURI(newItemId, tokenURI);
+
+        requestIdToTokenId[requestId] = newItemId;
+        tokenCounter++;
 
         /*
         else if (currentState == ContractState.BATTLING) {
