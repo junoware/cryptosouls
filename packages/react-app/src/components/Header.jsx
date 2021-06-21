@@ -7,7 +7,7 @@ export default function Header() {
   return (
     <PageHeader
       title="CryptoSouls"
-      subTitle="Resurrect NFT Warriors and Battle for Glory"
+      subTitle="Summon NFT Warriors and Battle for Glory"
       style={{ cursor: "pointer" }}
     />
   );

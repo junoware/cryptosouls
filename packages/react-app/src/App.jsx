@@ -425,7 +425,7 @@ function App(props) {
               tx(writeContracts.YourCollectible.createCollectible(loadedAssets[a].id, { gasPrice }));
             }}
           >
-            Resurrect
+            Summon
           </Button>
         </div>,
       );
@@ -547,7 +547,7 @@ function App(props) {
             */}
             <div style={{ margin: "auto", marginTop: "20px", width: "40%" }}>
               <div>
-                Resurrect the souls of powerful warriors as NFT's and duel your opponents! Minted warriors are given
+                Summon the souls of powerful warriors as NFT's and duel your opponents! Minted warriors are given
                 provably-random stats (1-100) in Strength, Intelligence, Endurance, Charisma and Luck. Once per day,
                 warriors can compete in best-of-three random stat matchups against one randomly-chosen opponent.
               </div>
@@ -584,12 +584,12 @@ function App(props) {
                         <div>{item.description}</div>
                       </Card>
 
-                      <div>
-                        <h4>Strength: {item.stats.strength}</h4>
-                        <h4>Intelligence: {item.stats.intelligence}</h4>
-                        <h4>Endurance: {item.stats.endurance}</h4>
-                        <h4>Charisma: {item.stats.charisma}</h4>
-                        <h4>Luck: {item.stats.luck}</h4>
+                      <div style={{ textAlign: "left" }}>
+                        <h4>{item.stats.strength} — Strength</h4>
+                        <h4>{item.stats.intelligence} — Intelligence</h4>
+                        <h4>{item.stats.endurance} — Endurance</h4>
+                        <h4>{item.stats.charisma} — Charisma</h4>
+                        <h4>{item.stats.luck} — Luck</h4>
                       </div>
 
                       <div>
