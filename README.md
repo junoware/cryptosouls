@@ -1,6 +1,4 @@
-# 🏗 scaffold-eth - 🎫 Buyer Mints NFT
-
-> (Counterfactual NFT minting example...)
+# CryptoSouls
 
 Deployer pays around (0.283719 ETH ~$500 at todays gas and price) for the initial contract but then NFTs are only minted once a buyer wants them. (The buyer of the NFT pays the gas to mint. ~$55)
 
