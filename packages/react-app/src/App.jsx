@@ -209,11 +209,18 @@ function App(props) {
       const collectibleUpdate = [];
       for (let tokenIndex = 0; tokenIndex < balance; tokenIndex++) {
         try {
-          console.log("GEtting token index", tokenIndex);
+          console.log("Getting token index", tokenIndex);
           const tokenId = await readContracts.YourCollectible.tokenOfOwnerByIndex(address, tokenIndex);
           console.log("tokenId", tokenId);
           const tokenURI = await readContracts.YourCollectible.tokenURI(tokenId);
           console.log("tokenURI", tokenURI);
+
+          const stats = {};
+          stats.strength = await readContracts.YourCollectible.tokenIdToStrength(tokenId);
+          stats.intelligence = await readContracts.YourCollectible.tokenIdToIntelligence(tokenId);
+          stats.endurance= await readContracts.YourCollectible.tokenIdToEndurance(tokenId);
+          stats.charisma = await readContracts.YourCollectible.tokenIdToCharisma(tokenId);
+          stats.luck = await readContracts.YourCollectible.tokenIdToLuck(tokenId);
 
           const ipfsHash = tokenURI.replace("https://ipfs.io/ipfs/", "");
           console.log("ipfsHash", ipfsHash);
@@ -223,7 +230,7 @@ function App(props) {
           try {
             const jsonManifest = JSON.parse(jsonManifestBuffer.toString());
             console.log("jsonManifest", jsonManifest);
-            collectibleUpdate.push({ id: tokenId, uri: tokenURI, owner: address, ...jsonManifest });
+            collectibleUpdate.push({ id: tokenId, uri: tokenURI, owner: address, stats, ...jsonManifest });
           } catch (e) {
             console.log(e);
           }
@@ -576,6 +583,14 @@ function App(props) {
                         </div>
                         <div>{item.description}</div>
                       </Card>
+
+                      <div>
+                        <h4>Strength: {item.stats.strength}</h4>
+                        <h4>Intelligence: {item.stats.intelligence}</h4>
+                        <h4>Endurance: {item.stats.endurance}</h4>
+                        <h4>Charisma: {item.stats.charisma}</h4>
+                        <h4>Luck: {item.stats.luck}</h4>
+                      </div>
 
                       <div>
                         owner:{" "}
