@@ -12,12 +12,13 @@ import "@chainlink/contracts/src/v0.6/VRFConsumerBase.sol";
 // GET LISTED ON OPENSEA: https://testnets.opensea.io/get-listed/step-two
 
 contract YourCollectible is ERC721, VRFConsumerBase {
-    enum ContractState {IDLE, BATTLING, MINTING}
-    ContractState internal currentState;
     string internal currentTokenURI;
 
     bytes32 internal keyHash;
     uint256 internal fee;
+    address internal ownerAddress;
+
+    enum BattleWinner {WAR1, WAR2, TIE}
 
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIds;
@@ -39,7 +40,7 @@ contract YourCollectible is ERC721, VRFConsumerBase {
         tokenCounter = 0;
         keyHash = 0x2ed0feb3e7fd2022120aa84fab1945545a9f2ffc9076fd6156fa96eaff4c1311;
         fee = 0.1 * 10**18; // 0.1 LINK
-        currentState = ContractState.IDLE;
+        ownerAddress = msg.sender;
     }
 
     event requestedCollectible(bytes32 indexed requestId);
@@ -51,7 +52,9 @@ contract YourCollectible is ERC721, VRFConsumerBase {
     //this marks an item in IPFS as "forsale"
     mapping(bytes32 => bool) public forSale;
 
-    mapping(address => uint256) public randomNums;
+    //this marks an item in IPFS as "forbattle"
+    mapping(uint256 => bool) public forBattle;
+
     //this lets you look up a token by the uri (assuming there is only one of each uri for now)
     // mapping(bytes32 => uint256) public uriToTokenId;
 
@@ -94,6 +97,13 @@ contract YourCollectible is ERC721, VRFConsumerBase {
         emit requestedCollectible(requestId);
     }
 
+    function beginBattleArenaProcess() public {
+        require(msg.sender == ownerAddress, "NOT OWNER");
+        uint256 seed = uint256(msg.sender);
+        bytes32 requestId = requestRandomness(keyHash, fee, seed);
+        requestIdToSender[requestId] = msg.sender;
+    }
+
     /**
      * Callback function used by VRF Coordinator
      */
@@ -101,110 +111,40 @@ contract YourCollectible is ERC721, VRFConsumerBase {
         internal
         override
     {
-        // require(randomNums[msg.sender] != 0, "NO RAND");
-
-        //if (currentState == ContractState.MINTING) {
-        // randomNums[msg.sender] = randomness;
+        // require(requestIdToSender[requestId] != 0, "NO RAND REQUEST");
         address owner = requestIdToSender[requestId];
-        string memory tokenURI = requestIdToTokenURI[requestId];
 
-        uint256 newItemId = tokenCounter;
-        uint256[] memory randomNumbers = expand(randomness, 5);
-        tokenIdToStrength[newItemId] = uint8((randomNumbers[0] % 100) + 1);
-        tokenIdToIntelligence[newItemId] = uint8((randomNumbers[1] % 100) + 1);
-        tokenIdToEndurance[newItemId] = uint8((randomNumbers[2] % 100) + 1);
-        tokenIdToCharisma[newItemId] = uint8((randomNumbers[3] % 100) + 1);
-        tokenIdToLuck[newItemId] = uint8((randomNumbers[4] % 100) + 1);
+        // if sender is the contract, do battle!
 
-        bytes32 uriHash = keccak256(abi.encodePacked(tokenURI));
+        if (owner == ownerAddress) {
+            startBattleArena(randomness);
+        } else {
+            string memory tokenURI = requestIdToTokenURI[requestId];
 
-        //make sure they are only minting something that is marked "forsale"
-        require(forSale[uriHash], "NOT FOR SALE");
-        forSale[uriHash] = false;
+            uint256 newItemId = tokenCounter;
+            uint256[] memory randomNumbers = expand(randomness, 5);
+            tokenIdToStrength[newItemId] = uint8((randomNumbers[0] % 100) + 1);
+            tokenIdToIntelligence[newItemId] = uint8(
+                (randomNumbers[1] % 100) + 1
+            );
+            tokenIdToEndurance[newItemId] = uint8((randomNumbers[2] % 100) + 1);
+            tokenIdToCharisma[newItemId] = uint8((randomNumbers[3] % 100) + 1);
+            tokenIdToLuck[newItemId] = uint8((randomNumbers[4] % 100) + 1);
 
-        _safeMint(owner, newItemId);
-        _setTokenURI(newItemId, tokenURI);
+            bytes32 uriHash = keccak256(abi.encodePacked(tokenURI));
 
-        requestIdToTokenId[requestId] = newItemId;
-        tokenCounter++;
+            //make sure they are only minting something that is marked "forsale"
+            require(forSale[uriHash], "NOT FOR SALE");
+            forSale[uriHash] = false;
 
-        /*
-        else if (currentState == ContractState.BATTLING) {
-            uint256[] memory randomNumbers =
-                expand(randomness, tokenIdsForBattle.length);
-            uint256 randomNumbersLength = randomNumbers.length;
-            uint256[3] memory randomStatIndexes =
-                [
-                    randomNumbers[randomNumbersLength - 1] % 5,
-                    randomNumbers[randomNumbersLength - 2] % 5,
-                    randomNumbers[randomNumbersLength - 3] % 5
-                ];
-            for (uint256 i = 0; i < tokenIdsForBattle.length; i + 2) {
-                if (tokenIdsForBattle.length > i + 1)
-                    battle(
-                        tokenIdsForBattle[i],
-                        tokenIdsForBattle[i + 1],
-                        randomStatIndexes
-                    );
-            }
-            delete tokenIdsForBattle;
-            currentState = ContractState.IDLE;
-        }
-        */
-    }
+            _safeMint(owner, newItemId);
+            _setTokenURI(newItemId, tokenURI);
 
-    /*
-    function battle(
-        uint256 warrior1TokenId,
-        uint256 warrior2TokenId,
-        uint256[3] memory statMatchups
-    ) public {
-        // get stats for each warrior
-        string memory firstTokenURI = tokenURI(warrior1TokenId);
-        bytes32 firstURIHash = keccak256(abi.encodePacked(firstTokenURI));
-        string memory secondTokenURI = tokenURI(warrior2TokenId);
-        bytes32 secondURIHash = keccak256(abi.encodePacked(secondTokenURI));
-        // run a for-loop where we compare different stats against each other
-        string memory result;
-        for (uint256 i = 0; i < statMatchups.length; i++) {
-            if (statMatchups[i] == 0) {
-                result = compareStat(
-                    tokenIdToStrength[firstURIHash],
-                    tokenIdToStrength[secondURIHash]
-                );
-            } else if (statMatchups[i] == 1) {
-                result = compareStat(
-                    tokenIdToIntelligence[firstURIHash],
-                    tokenIdToIntelligence[secondURIHash]
-                );
-            } else if (statMatchups[i] == 2) {
-                result = compareStat(
-                    tokenIdToEndurance[firstURIHash],
-                    tokenIdToEndurance[secondURIHash]
-                );
-            } else if (statMatchups[i] == 3) {
-                result = compareStat(
-                    tokenIdToCharisma[firstURIHash],
-                    tokenIdToCharisma[secondURIHash]
-                );
-            } else if (statMatchups[i] == 4) {
-                result = compareStat(
-                    tokenIdToLuck[firstURIHash],
-                    tokenIdToLuck[secondURIHash]
-                );
-            }
+            forBattle[newItemId] = false;
+            requestIdToTokenId[requestId] = newItemId;
+            tokenCounter++;
         }
     }
-
-    function compareStat(uint256 warrior1Stat, uint256 warrior2Stat)
-        internal
-        returns (string memory result)
-    {
-        if (warrior1Stat > warrior2Stat) return "warrior1";
-        else if (warrior1Stat < warrior2Stat) return "warrior2";
-        else return "tie";
-    }
-    
 
     /**
      * Put the token on the battle list!
@@ -218,50 +158,86 @@ contract YourCollectible is ERC721, VRFConsumerBase {
         }
         if (!inBattleArray) {
             tokenIdsForBattle.push(tokenId);
+            forBattle[tokenId] = true;
         }
     }
 
-    function startMintingItem(string memory tokenURI)
-        public
-        returns (bytes32 requestId)
+    /**
+     * Start and manage the battle arena!
+     */
+    function startBattleArena(uint256 randomness)
+        internal
+        returns (string memory result)
     {
-        currentState = ContractState.MINTING;
-        return createCollectible(tokenURI);
-        /*
-      if (currentState == ContractState.IDLE) {
-        currentTokenURI = tokenURI;
-        currentState = ContractState.MINTING;
-        return requestRandomness(keyHash, fee, block.number);      
-      }
-      */
+        uint256[] memory randomNumbers =
+            expand(randomness, tokenIdsForBattle.length);
+        uint256 randomNumbersLength = randomNumbers.length;
+        uint256[3] memory randomStatIndexes =
+            [
+                randomNumbers[randomNumbersLength - 1] % 5,
+                randomNumbers[randomNumbersLength - 2] % 5,
+                randomNumbers[randomNumbersLength - 3] % 5
+            ];
+        uint256 res;
+        for (uint256 i = 0; i < tokenIdsForBattle.length; i + 2) {
+            if (tokenIdsForBattle.length > i + 1)
+                res = battle(
+                    tokenIdsForBattle[i],
+                    tokenIdsForBattle[i + 1],
+                    randomStatIndexes
+                );
+        }
+        delete tokenIdsForBattle;
     }
 
-    /*
-    function mintItem(string memory tokenURI) public returns (uint256) {
-        // require(randomNums[msg.sender] != 0, "NO RAND");
-        bytes32 uriHash = keccak256(abi.encodePacked(tokenURI));
+    function battle(
+        uint256 warrior1TokenId,
+        uint256 warrior2TokenId,
+        uint256[3] memory statMatchups
+    ) internal returns (uint256 result) {
+        // run a for-loop where we compare different stats against each other
+        BattleWinner res;
+        uint256 battleNum = 0;
+        for (uint256 i = 0; i < statMatchups.length; i++) {
+            if (statMatchups[i] == 0) {
+                res = compareStat(
+                    tokenIdToStrength[warrior1TokenId],
+                    tokenIdToStrength[warrior2TokenId]
+                );
+            } else if (statMatchups[i] == 1) {
+                res = compareStat(
+                    tokenIdToIntelligence[warrior1TokenId],
+                    tokenIdToIntelligence[warrior2TokenId]
+                );
+            } else if (statMatchups[i] == 2) {
+                res = compareStat(
+                    tokenIdToEndurance[warrior1TokenId],
+                    tokenIdToEndurance[warrior2TokenId]
+                );
+            } else if (statMatchups[i] == 3) {
+                res = compareStat(
+                    tokenIdToCharisma[warrior1TokenId],
+                    tokenIdToCharisma[warrior2TokenId]
+                );
+            } else if (statMatchups[i] == 4) {
+                res = compareStat(
+                    tokenIdToLuck[warrior1TokenId],
+                    tokenIdToLuck[warrior2TokenId]
+                );
+            }
 
-        //make sure they are only minting something that is marked "forsale"
-        require(forSale[uriHash], "NOT FOR SALE");
-        forSale[uriHash] = false;
-
-        uint256[] memory randomNumbers = expand(randomNums[msg.sender], 5);
-
-        tokenIdToStrength[uriHash] = uint8((randomNumbers[0] % 100) + 1);
-        tokenIdToIntelligence[uriHash] = uint8((randomNumbers[1] % 100) + 1);
-        tokenIdToEndurance[uriHash] = uint8((randomNumbers[2] % 100) + 1);
-        tokenIdToCharisma[uriHash] = uint8((randomNumbers[3] % 100) + 1);
-        tokenIdToLuck[uriHash] = uint8((randomNumbers[4] % 100) + 1);
-
-        delete randomNums[msg.sender];
-
-        _tokenIds.increment();
-
-        uint256 id = _tokenIds.current();
-        _mint(msg.sender, id);
-        _setTokenURI(id, tokenURI);
-
-        uriToTokenId[uriHash] = id;
+            if (res == BattleWinner.WAR1) battleNum += 1;
+            else if (res == BattleWinner.WAR2) battleNum += 1;
+        }
+        return battleNum;
     }
-    */
+
+    function compareStat(uint256 warrior1Stat, uint256 warrior2Stat)
+        internal
+        returns (BattleWinner result)
+    {
+        if (warrior1Stat > warrior2Stat) return BattleWinner.WAR1;
+        else if (warrior1Stat < warrior2Stat) return BattleWinner.WAR2;
+        return BattleWinner.TIE;
+    }
 }

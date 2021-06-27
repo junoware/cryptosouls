@@ -222,6 +222,8 @@ function App(props) {
           stats.charisma = await readContracts.YourCollectible.tokenIdToCharisma(tokenId);
           stats.luck = await readContracts.YourCollectible.tokenIdToLuck(tokenId);
 
+          const inBattle = await readContracts.YourCollectible.forBattle(tokenId);
+
           const ipfsHash = tokenURI.replace("https://ipfs.io/ipfs/", "");
           console.log("ipfsHash", ipfsHash);
 
@@ -230,7 +232,7 @@ function App(props) {
           try {
             const jsonManifest = JSON.parse(jsonManifestBuffer.toString());
             console.log("jsonManifest", jsonManifest);
-            collectibleUpdate.push({ id: tokenId, uri: tokenURI, owner: address, stats, ...jsonManifest });
+            collectibleUpdate.push({ id: tokenId, uri: tokenURI, owner: address, stats, inBattle, ...jsonManifest });
           } catch (e) {
             console.log(e);
           }
@@ -585,11 +587,21 @@ function App(props) {
                       </Card>
 
                       <div style={{ textAlign: "left" }}>
-                        <h4>{item.stats.strength} — Strength</h4>
-                        <h4>{item.stats.intelligence} — Intelligence</h4>
-                        <h4>{item.stats.endurance} — Endurance</h4>
-                        <h4>{item.stats.charisma} — Charisma</h4>
-                        <h4>{item.stats.luck} — Luck</h4>
+                        <h5>{item.stats.strength} — Strength</h5>
+                        <h5>{item.stats.intelligence} — Intelligence</h5>
+                        <h5>{item.stats.endurance} — Endurance</h5>
+                        <h5>{item.stats.charisma} — Charisma</h5>
+                        <h5>{item.stats.luck} — Luck</h5>
+                        <br/>
+                        {item.inBattle === true ? <div><h4>Awaiting Battle</h4></div> : <div><Button
+                          onClick={() => {
+                            console.log("writeContracts", writeContracts);
+                            tx(writeContracts.YourCollectible.enlistForBattle(id));
+                          }}
+                        >
+                          Send to Battle Arena
+                        </Button></div>
+                        }
                       </div>
 
                       <div>
