@@ -17,6 +17,9 @@ contract YourCollectible is ERC721, VRFConsumerBase {
     bytes32 internal keyHash;
     uint256 internal fee;
     address internal ownerAddress;
+    bool public isSpawning;
+
+    // string[] public debugStrings;
 
     enum BattleWinner {WAR1, WAR2, TIE}
 
@@ -40,7 +43,8 @@ contract YourCollectible is ERC721, VRFConsumerBase {
         tokenCounter = 0;
         keyHash = 0x2ed0feb3e7fd2022120aa84fab1945545a9f2ffc9076fd6156fa96eaff4c1311;
         fee = 0.1 * 10**18; // 0.1 LINK
-        ownerAddress = msg.sender;
+        isSpawning = false;
+        ownerAddress = 0x82C0eC5A84C5487F57B1d6386C0002e8e253910c;
     }
 
     event requestedCollectible(bytes32 indexed requestId);
@@ -69,6 +73,7 @@ contract YourCollectible is ERC721, VRFConsumerBase {
     // luck
     mapping(uint256 => uint8) public tokenIdToLuck;
 
+    uint256 public tokenIdsForBattleAmount;
     uint256[] public tokenIdsForBattle;
 
     function expand(uint256 randomValue, uint256 n)
@@ -83,6 +88,11 @@ contract YourCollectible is ERC721, VRFConsumerBase {
         return expandedValues;
     }
 
+    function setOwner(string memory newOwner) public {
+        // require(addressToString(msg.sender) == ownerAddress, "NOT OWNER");
+        // ownerAddress = newOwner;
+    }
+
     /**
      * Requests randomness from sender address seed
      */
@@ -90,6 +100,7 @@ contract YourCollectible is ERC721, VRFConsumerBase {
         public
         returns (bytes32 requestId)
     {
+        isSpawning = true;
         uint256 seed = uint256(msg.sender);
         bytes32 requestId = requestRandomness(keyHash, fee, seed);
         requestIdToSender[requestId] = msg.sender;
@@ -98,7 +109,9 @@ contract YourCollectible is ERC721, VRFConsumerBase {
     }
 
     function beginBattleArenaProcess() public {
-        require(msg.sender == ownerAddress, "NOT OWNER");
+        // require(addressToString(msg.sender) == ownerAddress, "NOT OWNER");
+        isSpawning = false;
+
         uint256 seed = uint256(msg.sender);
         bytes32 requestId = requestRandomness(keyHash, fee, seed);
         requestIdToSender[requestId] = msg.sender;
@@ -116,7 +129,8 @@ contract YourCollectible is ERC721, VRFConsumerBase {
 
         // if sender is the contract, do battle!
 
-        if (owner == ownerAddress) {
+        if (!isSpawning) {
+            // debugStrings.push("got past the isSpawning check");
             startBattleArena(randomness);
         } else {
             string memory tokenURI = requestIdToTokenURI[requestId];
@@ -158,6 +172,7 @@ contract YourCollectible is ERC721, VRFConsumerBase {
         }
         if (!inBattleArray) {
             tokenIdsForBattle.push(tokenId);
+            tokenIdsForBattleAmount = tokenIdsForBattle.length;
             forBattle[tokenId] = true;
         }
     }
@@ -165,29 +180,45 @@ contract YourCollectible is ERC721, VRFConsumerBase {
     /**
      * Start and manage the battle arena!
      */
-    function startBattleArena(uint256 randomness)
-        internal
-        returns (string memory result)
-    {
+    function startBattleArena(uint256 randomness) public {
+        require(tokenIdsForBattleAmount > 0, "NO BATTLE TOKENS");
+        for (uint256 i = 0; i < tokenIdsForBattleAmount; i++) {
+            forBattle[tokenIdsForBattle[i]] = false;
+        }
+        uint256 randomNumbersLength = tokenIdsForBattleAmount + 3;
         uint256[] memory randomNumbers =
-            expand(randomness, tokenIdsForBattle.length);
-        uint256 randomNumbersLength = randomNumbers.length;
+            expand(randomness, randomNumbersLength);
+        /*
         uint256[3] memory randomStatIndexes =
-            [
-                randomNumbers[randomNumbersLength - 1] % 5,
-                randomNumbers[randomNumbersLength - 2] % 5,
-                randomNumbers[randomNumbersLength - 3] % 5
-            ];
+        [
+            randomNumbers[randomNumbersLength - 1] % 5,
+            randomNumbers[randomNumbersLength - 2] % 5,
+            randomNumbers[randomNumbersLength - 3] % 5
+        ];
+
+
+        /*
         uint256 res;
-        for (uint256 i = 0; i < tokenIdsForBattle.length; i + 2) {
-            if (tokenIdsForBattle.length > i + 1)
+        for (uint256 i = 0; i < tokenIdsForBattleAmount; i + 2) {
+            if (tokenIdsForBattle.length > i + 1) {
+                forBattle[tokenIdsForBattle[i + 1]] = false;
                 res = battle(
                     tokenIdsForBattle[i],
                     tokenIdsForBattle[i + 1],
                     randomStatIndexes
                 );
+            }
+            forBattle[tokenIdsForBattle[i]] = false;
         }
+        /*
         delete tokenIdsForBattle;
+        // debugStrings.push("got to the very end! :)");
+        for (uint256 i = 0; i < tokenIdsForBattleAmount; i++) {
+            forBattle[tokenIdsForBattle[i]] = false;
+        }
+        // delete tokenIdsForBattle;
+        */
+        tokenIdsForBattleAmount = 0;
     }
 
     function battle(

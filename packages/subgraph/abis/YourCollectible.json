@@ -294,6 +294,19 @@
   },
   {
     "inputs": [],
+    "name": "isSpawning",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "name",
     "outputs": [
       {
@@ -471,6 +484,32 @@
   {
     "inputs": [
       {
+        "internalType": "string",
+        "name": "newOwner",
+        "type": "string"
+      }
+    ],
+    "name": "setOwner",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "randomness",
+        "type": "uint256"
+      }
+    ],
+    "name": "startBattleArena",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "bytes4",
         "name": "interfaceId",
         "type": "bytes4"
@@ -636,6 +675,19 @@
       }
     ],
     "name": "tokenIdsForBattle",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "tokenIdsForBattleAmount",
     "outputs": [
       {
         "internalType": "uint256",
