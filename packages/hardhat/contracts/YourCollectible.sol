@@ -182,25 +182,23 @@ contract YourCollectible is ERC721, VRFConsumerBase {
      */
     function startBattleArena(uint256 randomness) public {
         require(tokenIdsForBattleAmount > 0, "NO BATTLE TOKENS");
-        for (uint256 i = 0; i < tokenIdsForBattleAmount; i++) {
-            forBattle[tokenIdsForBattle[i]] = false;
-        }
         uint256 randomNumbersLength = tokenIdsForBattleAmount + 3;
         uint256[] memory randomNumbers =
             expand(randomness, randomNumbersLength);
-        /*
         uint256[3] memory randomStatIndexes =
-        [
-            randomNumbers[randomNumbersLength - 1] % 5,
-            randomNumbers[randomNumbersLength - 2] % 5,
-            randomNumbers[randomNumbersLength - 3] % 5
-        ];
-
+            [
+                randomNumbers[randomNumbersLength - 1] % 5,
+                randomNumbers[randomNumbersLength - 2] % 5,
+                randomNumbers[randomNumbersLength - 3] % 5
+            ];
+        for (uint256 i = 0; i < tokenIdsForBattleAmount; i++) {
+            forBattle[tokenIdsForBattle[i]] = false;
+        }
 
         /*
         uint256 res;
         for (uint256 i = 0; i < tokenIdsForBattleAmount; i + 2) {
-            if (tokenIdsForBattle.length > i + 1) {
+            if (tokenIdsForBattleAmount > i + 1) {
                 forBattle[tokenIdsForBattle[i + 1]] = false;
                 res = battle(
                     tokenIdsForBattle[i],
@@ -210,6 +208,7 @@ contract YourCollectible is ERC721, VRFConsumerBase {
             }
             forBattle[tokenIdsForBattle[i]] = false;
         }
+        */
         /*
         delete tokenIdsForBattle;
         // debugStrings.push("got to the very end! :)");
@@ -229,7 +228,8 @@ contract YourCollectible is ERC721, VRFConsumerBase {
         // run a for-loop where we compare different stats against each other
         BattleWinner res;
         uint256 battleNum = 0;
-        for (uint256 i = 0; i < statMatchups.length; i++) {
+        uint256 statsMatchupsLength = 3;
+        for (uint256 i = 0; i < statsMatchupsLength; i++) {
             if (statMatchups[i] == 0) {
                 res = compareStat(
                     tokenIdToStrength[warrior1TokenId],
