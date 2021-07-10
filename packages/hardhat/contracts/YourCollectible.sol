@@ -191,24 +191,28 @@ contract YourCollectible is ERC721, VRFConsumerBase {
                 randomNumbers[randomNumbersLength - 2] % 5,
                 randomNumbers[randomNumbersLength - 3] % 5
             ];
-        for (uint256 i = 0; i < tokenIdsForBattleAmount; i++) {
-            forBattle[tokenIdsForBattle[i]] = false;
-        }
-
+        uint256 res =
+            battle(
+                tokenIdsForBattle[0],
+                tokenIdsForBattle[1],
+                randomStatIndexes
+            );
         /*
         uint256 res;
         for (uint256 i = 0; i < tokenIdsForBattleAmount; i + 2) {
             if (tokenIdsForBattleAmount > i + 1) {
                 forBattle[tokenIdsForBattle[i + 1]] = false;
+                /*
                 res = battle(
                     tokenIdsForBattle[i],
                     tokenIdsForBattle[i + 1],
                     randomStatIndexes
                 );
+                
             }
             forBattle[tokenIdsForBattle[i]] = false;
         }
-        */
+
         /*
         delete tokenIdsForBattle;
         // debugStrings.push("got to the very end! :)");
@@ -217,6 +221,9 @@ contract YourCollectible is ERC721, VRFConsumerBase {
         }
         // delete tokenIdsForBattle;
         */
+        for (uint256 i = 0; i < tokenIdsForBattleAmount; i++) {
+            forBattle[tokenIdsForBattle[i]] = false;
+        }
         tokenIdsForBattleAmount = 0;
     }
 

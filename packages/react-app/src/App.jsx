@@ -32,6 +32,8 @@ const { BufferList } = require("bl");
 // https://www.npmjs.com/package/ipfs-http-client
 const ipfsAPI = require("ipfs-http-client");
 
+const master = 0x82C0eC5A84C5487F57B1d6386C0002e8e253910c;
+
 const ipfs = ipfsAPI({ host: "ipfs.infura.io", port: "5001", protocol: "https" });
 
 console.log("📦 Assets: ", assets);
@@ -478,6 +480,16 @@ function App(props) {
 
       <BrowserRouter>
         <Menu style={{ textAlign: "center" }} selectedKeys={[route]} mode="horizontal">
+          <Menu.Item key="/home">
+            <Link
+              onClick={() => {
+               setRoute("/home");
+              }}
+              to="/home"
+            >
+              Home
+            </Link>
+          </Menu.Item>
           <Menu.Item key="/">
             <Link
               onClick={() => {
@@ -495,7 +507,7 @@ function App(props) {
               }}
               to="/yourcollectibles"
             >
-              YourCollectibles
+              Collection
             </Link>
           </Menu.Item>
           <Menu.Item key="/transfers">
@@ -541,22 +553,40 @@ function App(props) {
         </Menu>
 
         <Switch>
+        <Route exact path="/home">
+            {/*
+                🎛 this scaffolding is full of commonly used components
+                this <Contract/> component will automatically parse your ABI
+                and give you a form to interact with it locally
+            */}
+            <div style={{ marginTop: "20px" }}>
+              <h1>Win NFT's and ETH in <b>CryptoSouls!</b></h1>
+            </div>
+          <div style={{ margin: "auto", marginTop: "20px", width: "70%" }}>
+            <div style={{ contain: "content" }}>
+              <div style={{ float: "left", width: "30%" }}>
+                <img src="images/soul.svg" type="image" style={{ height: "240px" }} ></img>
+              </div>
+              <div style={{ margin: "auto", width: "100%" }}>
+                <h4>
+                  Summon the souls of powerful warriors as NFT's and duel your opponents! Minted warriors are given
+                  provably-random stats (1-100) in Strength, Intelligence, Endurance, Charisma and Luck. Once per day,
+                  warriors can compete in best-of-three random stat matchups against one randomly-chosen opponent.
+                </h4>
+              </div>
+              </div>
+
+              
+            </div>
+
+          </Route>
+
           <Route exact path="/">
             {/*
                 🎛 this scaffolding is full of commonly used components
                 this <Contract/> component will automatically parse your ABI
                 and give you a form to interact with it locally
             */}
-            <div style={{ margin: "auto", marginTop: "20px", width: "40%" }}>
-              <div>
-                Summon the souls of powerful warriors as NFT's and duel your opponents! Minted warriors are given
-                provably-random stats (1-100) in Strength, Intelligence, Endurance, Charisma and Luck. Once per day,
-                warriors can compete in best-of-three random stat matchups against one randomly-chosen opponent.
-              </div>
-              <div style={{ marginTop: "20px" }}>
-                <h2>The winner gets the other player's NFT!</h2>
-              </div>
-            </div>
             <div style={{ maxWidth: 820, margin: "auto", marginTop: 32, paddingBottom: 256 }}>
               <StackGrid columnWidth={200} gutterWidth={16} gutterHeight={16}>
                 {galleryList}
@@ -571,6 +601,14 @@ function App(props) {
                 dataSource={yourCollectibles}
                 renderItem={item => {
                   const id = item.id.toNumber();
+                  let itemClass;
+                  const stats = { 
+                    strength: item.stats.strength, 
+                    intelligence: item.stats.intelligence,
+                    endurance: item.stats.endurance,
+                    charisma: item.stats.charisma,
+                    luck: item.stats.luck
+                  };
                   return (
                     <List.Item key={id + "_" + item.uri + "_" + item.owner}>
                       <Card
@@ -587,20 +625,50 @@ function App(props) {
                       </Card>
 
                       <div style={{ textAlign: "left" }}>
-                        <h5>{item.stats.strength} — Strength</h5>
-                        <h5>{item.stats.intelligence} — Intelligence</h5>
-                        <h5>{item.stats.endurance} — Endurance</h5>
-                        <h5>{item.stats.charisma} — Charisma</h5>
-                        <h5>{item.stats.luck} — Luck</h5>
-                        <br/>
-                        {item.inBattle === true ? <div><h4>Awaiting Battle</h4></div> : <div><Button
-                          onClick={() => {
-                            console.log("writeContracts", writeContracts);
-                            tx(writeContracts.YourCollectible.enlistForBattle(id));
-                          }}
-                        >
-                          Send to Battle Arena
-                        </Button></div>
+                        <h5>{stats.strength} — Strength</h5>
+                        <h5>{stats.intelligence} — Intelligence</h5>
+                        <h5>{stats.endurance} — Endurance</h5>
+                        <h5>{stats.charisma} — Charisma</h5>
+                        <h5>{stats.luck} — Luck</h5>
+                        { item.inBattle === true ? 
+                          <div>
+                            <br/>
+                            <h4>Awaiting Battle</h4>
+                          </div> : 
+                          <div>
+                          <Button
+                            onClick={() => {
+                              console.log("writeContracts", writeContracts);
+                              tx(writeContracts.YourCollectible.enlistForBattle(id));
+                            }}
+                          >
+                            Bet 0.01 ETH
+                          </Button>
+                          <Button
+                            onClick={() => {
+                              console.log("writeContracts", writeContracts);
+                              tx(writeContracts.YourCollectible.enlistForBattle(id));
+                            }}
+                          >
+                            Bet 0.1 ETH
+                          </Button>
+                          <Button
+                            onClick={() => {
+                              console.log("writeContracts", writeContracts);
+                              tx(writeContracts.YourCollectible.enlistForBattle(id));
+                            }}
+                          >
+                            Bet 1 ETH
+                          </Button>
+                          <Button
+                            onClick={() => {
+                              console.log("writeContracts", writeContracts);
+                              tx(writeContracts.YourCollectible.enlistForBattle(id));
+                            }}
+                          >
+                            Bet NFT                          
+                          </Button>
+                          </div>
                         }
                       </div>
 
