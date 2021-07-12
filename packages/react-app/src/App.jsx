@@ -563,26 +563,51 @@ function App(props) {
               <div
                 style={{ margin: "auto", marginTop: "40px", marginBottom: "40px", contain: "content", width: "70%" }}
               >
-                <div>
-                  <h1>
-                    <b>Win NFT's and ETH in CryptoSouls</b>
+                <div style={{ marginTop: "20px" }}>
+                  <h1 className="title-label">
+                    <b>Win ETH and NFTs in CryptoSouls</b>
                   </h1>
                 </div>
                 <div style={{ float: "left", width: "30%" }}>
-                  <img src="images/soul.svg" type="image" style={{ height: "240px" }} />
+                  <img alt="" src="images/soul.svg" type="image" style={{ height: "240px" }} />
                 </div>
-                <div style={{ textAlign: "left", width: "80%", marginTop: "70px" }}>
-                  <h2>Summon the souls of powerful warriors as NFT's!</h2>
+                <div style={{ textAlign: "left", width: "90%", marginTop: "50px" }}>
+                  <h1>Summon powerful souls as NFTs</h1>
                   <br />
-                  <h4>
-                    Minted warriors are given provably-random stats (1-100) in Strength, Intelligence, Endurance,
-                    Charisma and Luck. Once per day, warriors can compete in best-of-three random stat matchups against
-                    one randomly-chosen opponent.
-                  </h4>
+                  <h3>
+                    Minted NFT souls are given{" "}
+                    <a target="_blank" href="https://chain.link/solutions/chainlink-vrf">
+                      provably-random
+                    </a>{" "}
+                    stats in Strength, Intelligence, Endurance, Charisma and Luck. A CryptoSoul's stats can NEVER be changed.
+                  </h3>
                 </div>
               </div>
-              <div style={{ contain: "content", backgroundColor: "#141414" }}>
-                <img src="images/swords.svg" type="image" style={{ marginTop: "20px", height: "340px" }} />
+              <div
+                style={{
+                  margin: "auto",
+                  marginTop: "40px",
+                  marginBottom: "40px",
+                  contain: "content",
+                  width: "100%",
+                  backgroundColor: "#141414",
+                }}
+              >
+                <div
+                  style={{ contain: "content", width: "60%", margin: "auto", marginTop: "60px", marginBottom: "40px" }}
+                >
+                  <div style={{ float: "right", width: "30%" }}>
+                    <img alt="" src="images/swords.svg" type="image" style={{ height: "240px" }} />
+                  </div>
+                  <div style={{ textAlign: "left", width: "90%", marginTop: "30px" }}>
+                    <h1>Win ETH in the Battle Arena</h1>
+                    <br />
+                    <h3>
+                      CryptoSouls can compete in best-of-three battles in the Battle Arena. Winning players claim their
+                      opponent's ETH or CryptoSoul.
+                    </h3>
+                  </div>
+                </div>
               </div>
             </div>
           </Route>
@@ -607,14 +632,13 @@ function App(props) {
                 dataSource={yourCollectibles}
                 renderItem={item => {
                   const id = item.id.toNumber();
-                  let itemClass;
-                  const stats = {
-                    strength: item.stats.strength,
-                    intelligence: item.stats.intelligence,
-                    endurance: item.stats.endurance,
-                    charisma: item.stats.charisma,
-                    luck: item.stats.luck,
-                  };
+                  const stats = [
+                    { name: "Strength", value: item.stats.strength },
+                    { name: "Intelligence", value: item.stats.intelligence },
+                    { name: "Endurance", value: item.stats.endurance },
+                    { name: "Charisma", value: item.stats.charisma },
+                    { name: "Luck", value: item.stats.luck },
+                  ];
                   return (
                     <List.Item key={id + "_" + item.uri + "_" + item.owner}>
                       <Card
@@ -631,11 +655,21 @@ function App(props) {
                       </Card>
 
                       <div style={{ textAlign: "left" }}>
-                        <h3>{stats.strength} — Strength</h3>
-                        <h3>{stats.intelligence} — Intelligence</h3>
-                        <h3>{stats.endurance} — Endurance</h3>
-                        <h3>{stats.charisma} — Charisma</h3>
-                        <h3>{stats.luck} — Luck</h3>
+                        {stats.map(stat => (
+                          <h3
+                            className={
+                              stat.value > 89
+                                ? "tier-gold"
+                                : stat.value > 69
+                                ? "tier-high"
+                                : stat.value < 30
+                                ? "tier-low"
+                                : "tier-mid"
+                            }
+                          >
+                            {stat.value} — {stat.name}
+                          </h3>
+                        ))}
                         {item.inBattle === true ? (
                           <div>
                             <br />

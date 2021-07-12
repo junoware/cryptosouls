@@ -1,3 +1,19 @@
 .App {
   text-align: center;
 }
+
+.tier-gold {
+  color: gold;
+}
+
+.tier-high {
+  color: lightgreen;
+}
+
+.tier-low {
+  color: lightcoral;
+}
+
+.title-label {
+  font-size: 38px;
+}
