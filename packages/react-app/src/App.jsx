@@ -662,10 +662,10 @@ function App(props) {
                               stat.value > 89
                                 ? "tier-gold"
                                 : stat.value > 69
-                                ? "tier-high"
-                                : stat.value < 30
-                                ? "tier-low"
-                                : "tier-mid"
+                                  ? "tier-high"
+                                  : stat.value < 30
+                                    ? "tier-low"
+                                    : "tier-mid"
                             }
                           >
                             {stat.value} — {stat.name}
