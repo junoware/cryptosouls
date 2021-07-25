@@ -21,7 +21,11 @@ contract YourCollectible is ERC721, VRFConsumerBase {
 
     // string[] public debugStrings;
 
-    enum BattleWinner {WAR1, WAR2, TIE}
+    enum BattleWinner {
+        WAR1,
+        WAR2,
+        TIE
+    }
 
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIds;
@@ -183,20 +187,20 @@ contract YourCollectible is ERC721, VRFConsumerBase {
     function startBattleArena(uint256 randomness) public {
         require(tokenIdsForBattleAmount > 0, "NO BATTLE TOKENS");
         uint256 randomNumbersLength = tokenIdsForBattleAmount + 3;
-        uint256[] memory randomNumbers =
-            expand(randomness, randomNumbersLength);
-        uint256[3] memory randomStatIndexes =
-            [
-                randomNumbers[randomNumbersLength - 1] % 5,
-                randomNumbers[randomNumbersLength - 2] % 5,
-                randomNumbers[randomNumbersLength - 3] % 5
-            ];
-        uint256 res =
-            battle(
-                tokenIdsForBattle[0],
-                tokenIdsForBattle[1],
-                randomStatIndexes
-            );
+        uint256[] memory randomNumbers = expand(
+            randomness,
+            randomNumbersLength
+        );
+        uint256[3] memory randomStatIndexes = [
+            randomNumbers[randomNumbersLength - 1] % 5,
+            randomNumbers[randomNumbersLength - 2] % 5,
+            randomNumbers[randomNumbersLength - 3] % 5
+        ];
+        uint256 res = battle(
+            tokenIdsForBattle[0],
+            tokenIdsForBattle[1],
+            randomStatIndexes
+        );
         /*
         uint256 res;
         for (uint256 i = 0; i < tokenIdsForBattleAmount; i + 2) {

@@ -576,10 +576,11 @@ function App(props) {
                   <br />
                   <h3>
                     Minted NFT souls are given{" "}
-                    <a target="_blank" href="https://chain.link/solutions/chainlink-vrf">
+                    <a target="_blank" rel="noreferrer" href="https://chain.link/solutions/chainlink-vrf">
                       provably-random
                     </a>{" "}
-                    stats in Strength, Intelligence, Endurance, Charisma and Luck. A CryptoSoul's stats can NEVER be changed.
+                    stats in Strength, Intelligence, Endurance, Charisma and Luck. A CryptoSoul's stats can NEVER be
+                    changed.
                   </h3>
                 </div>
               </div>
@@ -684,31 +685,7 @@ function App(props) {
                                 tx(writeContracts.YourCollectible.enlistForBattle(id));
                               }}
                             >
-                              Bet 0.01 ETH
-                            </Button>
-                            <Button
-                              onClick={() => {
-                                console.log("writeContracts", writeContracts);
-                                tx(writeContracts.YourCollectible.enlistForBattle(id));
-                              }}
-                            >
-                              Bet 0.1 ETH
-                            </Button>
-                            <Button
-                              onClick={() => {
-                                console.log("writeContracts", writeContracts);
-                                tx(writeContracts.YourCollectible.enlistForBattle(id));
-                              }}
-                            >
-                              Bet 1 ETH
-                            </Button>
-                            <Button
-                              onClick={() => {
-                                console.log("writeContracts", writeContracts);
-                                tx(writeContracts.YourCollectible.enlistForBattle(id));
-                              }}
-                            >
-                              Bet NFT
+                              Send {item.name} to Battle!
                             </Button>
                           </div>
                         )}
