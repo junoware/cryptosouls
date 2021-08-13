@@ -1,4 +1,5 @@
 .App {
+  background-color: #212121;
   text-align: center;
 }
 
@@ -14,6 +15,3 @@
   color: lightcoral;
 }
 
-.title-label {
-  font-size: 38px;
-}

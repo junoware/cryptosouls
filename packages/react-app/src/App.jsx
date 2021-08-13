@@ -10,10 +10,22 @@ import React, { useCallback, useEffect, useState } from "react";
 import ReactJson from "react-json-view";
 import { BrowserRouter, Link, Route, Switch } from "react-router-dom";
 import StackGrid from "react-stack-grid";
+import UIkit from "uikit";
 import Web3Modal from "web3modal";
 import "./App.css";
 import assets from "./assets.js";
-import { Account, Address, AddressInput, Contract, Faucet, GasGauge, Header, Ramp, ThemeSwitch } from "./components";
+import {
+  Account,
+  Address,
+  AddressInput,
+  Contract,
+  Faucet,
+  GasGauge,
+  Header,
+  Footer,
+  Ramp,
+  ThemeSwitch,
+} from "./components";
 import { DAI_ABI, DAI_ADDRESS, INFURA_ID, NETWORK, NETWORKS } from "./constants";
 import { Transactor } from "./helpers";
 import {
@@ -476,8 +488,7 @@ function App(props) {
     <div className="App">
       {/* ✏️ Edit the header and change the title to your project name */}
       <Header />
-      {networkDisplay}
-
+      <div style={{ display: "none !important" }}>{networkDisplay}</div>
       <BrowserRouter>
         <Menu style={{ textAlign: "center" }} selectedKeys={[route]} mode="horizontal">
           <Menu.Item key="/home">
@@ -561,27 +572,30 @@ function App(props) {
             */}
             <div style={{ width: "100%" }}>
               <div
-                style={{ margin: "auto", marginTop: "40px", marginBottom: "40px", contain: "content", width: "70%" }}
+                style={{ margin: "auto", marginTop: "50px", marginBottom: "40px", contain: "content", width: "70%" }}
               >
-                <div style={{ marginTop: "20px" }}>
-                  <h1 className="title-label">
-                    <b>Win ETH and NFTs in CryptoSouls</b>
-                  </h1>
+                <div style={{ marginTop: "20px", marginBottom: "24px" }}>
+                  <h2 className="title-label">
+                    <b>Summon NFT Warriors & Battle for Glory in CryptoSouls</b>
+                  </h2>
                 </div>
-                <div style={{ float: "left", width: "30%" }}>
+                <div style={{ width: "100%" }}>
+                  <img alt="" src="images/soul.svg" type="image" style={{ height: "240px" }} />
+                  <img alt="" src="images/soul.svg" type="image" style={{ height: "240px" }} />
                   <img alt="" src="images/soul.svg" type="image" style={{ height: "240px" }} />
                 </div>
-                <div style={{ textAlign: "left", width: "90%", marginTop: "50px" }}>
-                  <h1>Summon powerful souls as NFTs</h1>
-                  <br />
-                  <h3>
-                    Minted NFT souls are given{" "}
-                    <a target="_blank" rel="noreferrer" href="https://chain.link/solutions/chainlink-vrf">
-                      provably-random
-                    </a>{" "}
-                    stats in Strength, Intelligence, Endurance, Charisma and Luck. A CryptoSoul's stats can NEVER be
-                    changed.
-                  </h3>
+                <div style={{ margin: "24px" }}>
+                  <button
+                    style={{ width: "240px", marginTop: "10px" }}
+                    onClick={() => {
+                      setRoute("/");
+                    }}
+                    to="/"
+                    type="button"
+                    className="btn btn-primary"
+                  >
+                    <h5 style={{ marginTop: "8px" }}>Start Summoning</h5>
+                  </button>
                 </div>
               </div>
               <div
@@ -589,24 +603,48 @@ function App(props) {
                   margin: "auto",
                   marginTop: "40px",
                   marginBottom: "40px",
-                  contain: "content",
                   width: "100%",
-                  backgroundColor: "#141414",
                 }}
               >
                 <div
-                  style={{ contain: "content", width: "60%", margin: "auto", marginTop: "60px", marginBottom: "40px" }}
+                  style={{
+                    width: "65%",
+                    margin: "auto",
+                    marginTop: "60px",
+                    marginBottom: "40px",
+                    backgroundColor: "#141414",
+                  }}
                 >
-                  <div style={{ float: "right", width: "30%" }}>
-                    <img alt="" src="images/swords.svg" type="image" style={{ height: "240px" }} />
+                  <div style={{ padding: "14px", outline: "1px solid" }}>
+                    <div style={{ float: "left", width: "30%" }}>
+                      <img alt="" src="images/soul.svg" type="image" style={{ height: "160px" }} />
+                    </div>
+                    <div style={{ textAlign: "left", margin: "30px" }}>
+                      <h4>Summon Famous Warriors as NFTs</h4>
+                      <br />
+                      <h6>
+                        Minted CryptoSoul NFTs are given{" "}
+                        <a target="_blank" rel="noreferrer" href="https://chain.link/solutions/chainlink-vrf">
+                          provably-random
+                        </a>{" "}
+                        stats in Strength, Intelligence, Endurance, Charisma and Luck. A CryptoSoul's stats can{" "}
+                        <u>NEVER</u> be changed.
+                      </h6>
+                    </div>
                   </div>
-                  <div style={{ textAlign: "left", width: "90%", marginTop: "30px" }}>
-                    <h1>Win ETH in the Battle Arena</h1>
-                    <br />
-                    <h3>
-                      CryptoSouls can compete in best-of-three battles in the Battle Arena. Winning players claim their
-                      opponent's ETH or CryptoSoul.
-                    </h3>
+                  <div style={{ padding: "14px" }}>
+                    <div style={{ float: "left", width: "30%" }}>
+                      <img alt="" src="images/swords.svg" type="image" style={{ height: "160px" }} />
+                    </div>
+                    <div style={{ textAlign: "left", margin: "30px" }}>
+                      <h4>Win ETH in the Battle Arena</h4>
+                      <br />
+                      <h6>
+                        CryptoSouls can compete in best-of-three battles in the Battle Arena.
+                        <br />
+                        Winning players claim their opponent's Battle Arena buy-in.
+                      </h6>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -657,7 +695,7 @@ function App(props) {
 
                       <div style={{ textAlign: "left" }}>
                         {stats.map(stat => (
-                          <h3
+                          <h6
                             className={
                               stat.value > 89
                                 ? "tier-gold"
@@ -669,7 +707,7 @@ function App(props) {
                             }
                           >
                             {stat.value} — {stat.name}
-                          </h3>
+                          </h6>
                         ))}
                         {item.inBattle === true ? (
                           <div>
@@ -886,6 +924,7 @@ function App(props) {
           </Col>
         </Row>
       </div>
+      <Footer />
     </div>
   );
 }
