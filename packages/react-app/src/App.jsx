@@ -10,7 +10,6 @@ import React, { useCallback, useEffect, useState } from "react";
 import ReactJson from "react-json-view";
 import { BrowserRouter, Link, Route, Switch } from "react-router-dom";
 import StackGrid from "react-stack-grid";
-import UIkit from "uikit";
 import Web3Modal from "web3modal";
 import "./App.css";
 import assets from "./assets.js";
@@ -221,6 +220,7 @@ function App(props) {
   useEffect(() => {
     const updateYourCollectibles = async () => {
       const collectibleUpdate = [];
+
       for (let tokenIndex = 0; tokenIndex < balance; tokenIndex++) {
         try {
           console.log("Getting token index", tokenIndex);
@@ -236,6 +236,9 @@ function App(props) {
           stats.charisma = await readContracts.YourCollectible.tokenIdToCharisma(tokenId);
           stats.luck = await readContracts.YourCollectible.tokenIdToLuck(tokenId);
 
+          const isApproved =
+            (await readContracts.YourCollectible.getApproved(tokenId)) === readContracts.YourCollectible.address;
+          console.log(isApproved);
           const inBattle = await readContracts.YourCollectible.forBattle(tokenId);
 
           const ipfsHash = tokenURI.replace("https://ipfs.io/ipfs/", "");
@@ -246,7 +249,15 @@ function App(props) {
           try {
             const jsonManifest = JSON.parse(jsonManifestBuffer.toString());
             console.log("jsonManifest", jsonManifest);
-            collectibleUpdate.push({ id: tokenId, uri: tokenURI, owner: address, stats, inBattle, ...jsonManifest });
+            collectibleUpdate.push({
+              id: tokenId,
+              uri: tokenURI,
+              owner: address,
+              stats,
+              inBattle,
+              isApproved,
+              ...jsonManifest,
+            });
           } catch (e) {
             console.log(e);
           }
@@ -666,6 +677,15 @@ function App(props) {
 
           <Route path="/yourcollectibles">
             <div style={{ width: 1000, margin: "auto", marginTop: 32, paddingBottom: 32 }}>
+              <Button
+                onClick={() => {
+                  console.log("writeContracts", writeContracts);
+                  tx(writeContracts.YourCollectible.setApprovalForAll(readContracts.YourCollectible.address, true));
+                }}
+              >
+                Approve CryptoSouls smart contract to enlist your NFTs!
+              </Button>
+
               <List
                 bordered
                 dataSource={yourCollectibles}
@@ -700,16 +720,32 @@ function App(props) {
                               stat.value > 89
                                 ? "tier-gold"
                                 : stat.value > 69
-                                  ? "tier-high"
-                                  : stat.value < 30
-                                    ? "tier-low"
-                                    : "tier-mid"
+                                ? "tier-high"
+                                : stat.value < 30
+                                ? "tier-low"
+                                : "tier-mid"
                             }
                           >
                             {stat.value} — {stat.name}
                           </h6>
                         ))}
-                        {item.inBattle === true ? (
+                        {item.isApproved === false ? (
+                          <div>
+                            <br />
+                            <Button
+                              onClick={() => {
+                                console.log("writeContracts", writeContracts);
+                                console.log("item");
+                                console.log(item);
+                                console.log("get approved!");
+                                console.log(item.isApproved);
+                                tx(writeContracts.YourCollectible.approve(readContracts.YourCollectible.address, id));
+                              }}
+                            >
+                              Approve
+                            </Button>
+                          </div>
+                        ) : item.inBattle === true ? (
                           <div>
                             <br />
                             <h4>Awaiting Battle</h4>
@@ -720,6 +756,10 @@ function App(props) {
                             <Button
                               onClick={() => {
                                 console.log("writeContracts", writeContracts);
+                                console.log("item");
+                                console.log(item);
+                                console.log("get approved!");
+                                console.log(item.isApprovedForAll);
                                 tx(writeContracts.YourCollectible.enlistForBattle(id));
                               }}
                             >

@@ -27,6 +27,12 @@ contract YourCollectible is ERC721, VRFConsumerBase {
         TIE
     }
 
+    event Approval(
+        address indexed _owner,
+        address indexed _approved,
+        uint256 indexed _tokenId
+    );
+
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIds;
 
@@ -65,6 +71,8 @@ contract YourCollectible is ERC721, VRFConsumerBase {
 
     //this lets you look up a token by the uri (assuming there is only one of each uri for now)
     // mapping(bytes32 => uint256) public uriToTokenId;
+
+    mapping(uint256 => address) public tokenIdToOwnerAddress;
 
     // strength
     mapping(uint256 => uint8) public tokenIdToStrength;
@@ -158,6 +166,7 @@ contract YourCollectible is ERC721, VRFConsumerBase {
             _safeMint(owner, newItemId);
             _setTokenURI(newItemId, tokenURI);
 
+            tokenIdToOwnerAddress[newItemId] = owner;
             forBattle[newItemId] = false;
             requestIdToTokenId[requestId] = newItemId;
             tokenCounter++;
@@ -168,6 +177,7 @@ contract YourCollectible is ERC721, VRFConsumerBase {
      * Put the token on the battle list!
      */
     function enlistForBattle(uint256 tokenId) public {
+        require(forBattle[tokenId] == false, "WARRIOR ALREADY ENLISTED");
         bool inBattleArray = false;
         for (uint256 j = 0; j < tokenIdsForBattle.length; j++) {
             if (tokenIdsForBattle[j] == tokenId) {
@@ -181,11 +191,19 @@ contract YourCollectible is ERC721, VRFConsumerBase {
         }
     }
 
+    /*
+        safeTransferFrom(
+            tokenIdToOwnerAddress[tokenId],
+            address(this),
+            tokenId
+        );
+        */
+
     /**
      * Start and manage the battle arena!
      */
     function startBattleArena(uint256 randomness) public {
-        require(tokenIdsForBattleAmount > 0, "NO BATTLE TOKENS");
+        require(tokenIdsForBattleAmount > 1, "NOT ENOUGH BATTLE TOKENS");
         uint256 randomNumbersLength = tokenIdsForBattleAmount + 3;
         uint256[] memory randomNumbers = expand(
             randomness,
@@ -201,6 +219,22 @@ contract YourCollectible is ERC721, VRFConsumerBase {
             tokenIdsForBattle[1],
             randomStatIndexes
         );
+
+        if (res > 0) {
+            safeTransferFrom(
+                tokenIdToOwnerAddress[tokenIdsForBattle[0]],
+                tokenIdToOwnerAddress[tokenIdsForBattle[1]],
+                tokenIdsForBattle[0]
+            );
+            tokenIdToOwnerAddress[0] = tokenIdToOwnerAddress[1];
+        } else if (res < 0) {
+            safeTransferFrom(
+                tokenIdToOwnerAddress[tokenIdsForBattle[1]],
+                tokenIdToOwnerAddress[tokenIdsForBattle[0]],
+                tokenIdsForBattle[1]
+            );
+            tokenIdToOwnerAddress[1] = tokenIdToOwnerAddress[0];
+        }
         /*
         uint256 res;
         for (uint256 i = 0; i < tokenIdsForBattleAmount; i + 2) {
@@ -225,10 +259,12 @@ contract YourCollectible is ERC721, VRFConsumerBase {
         }
         // delete tokenIdsForBattle;
         */
+
         for (uint256 i = 0; i < tokenIdsForBattleAmount; i++) {
             forBattle[tokenIdsForBattle[i]] = false;
         }
         tokenIdsForBattleAmount = 0;
+        tokenIdsForBattle = new uint256[](0);
     }
 
     function battle(
@@ -269,13 +305,14 @@ contract YourCollectible is ERC721, VRFConsumerBase {
             }
 
             if (res == BattleWinner.WAR1) battleNum += 1;
-            else if (res == BattleWinner.WAR2) battleNum += 1;
+            else if (res == BattleWinner.WAR2) battleNum -= 1;
         }
         return battleNum;
     }
 
     function compareStat(uint256 warrior1Stat, uint256 warrior2Stat)
         internal
+        pure
         returns (BattleWinner result)
     {
         if (warrior1Stat > warrior2Stat) return BattleWinner.WAR1;
