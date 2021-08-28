@@ -426,6 +426,19 @@
     "type": "function"
   },
   {
+    "inputs": [],
+    "name": "resultAddress",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
         "internalType": "address",
@@ -517,7 +530,7 @@
     ],
     "name": "startBattleArena",
     "outputs": [],
-    "stateMutability": "nonpayable",
+    "stateMutability": "payable",
     "type": "function"
   },
   {

@@ -19,6 +19,7 @@ contract YourCollectible is ERC721, VRFConsumerBase {
     address internal ownerAddress;
     bool public isSpawning;
     uint256 public result;
+    address public resultAddress;
 
     // string[] public debugStrings;
 
@@ -180,7 +181,7 @@ contract YourCollectible is ERC721, VRFConsumerBase {
      */
     function enlistForBattle(uint256 tokenId) public payable {
         require(forBattle[tokenId] == false, "WARRIOR ALREADY ENLISTED");
-        require(msg.value == 50000000000000000, "NOT ENOUGH ETHER SENT");
+        require(msg.value == 50000000000000000, "INCORRECT ETHER AMOUNT SENT");
 
         bool inBattleArray = false;
         for (uint256 j = 0; j < tokenIdsForBattle.length; j++) {
@@ -216,25 +217,37 @@ contract YourCollectible is ERC721, VRFConsumerBase {
             tokenIdsForBattle[1],
             randomStatIndexes
         );
+
         result = res;
         if (res > 0) {
-            payable(tokenIdToOwnerAddress[0]).transfer(50000000000000000);
+            (bool success, ) = tokenIdToOwnerAddress[0].call{
+                value: 90000000000000000
+            }("");
+            require(success, "Transfer failed.");
+            resultAddress = tokenIdToOwnerAddress[0];
         } else if (res < 0) {
-            payable(tokenIdToOwnerAddress[1]).transfer(50000000000000000);
+            (bool success, ) = tokenIdToOwnerAddress[1].call{
+                value: 90000000000000000
+            }("");
+            require(success, "Transfer failed.");
+            resultAddress = tokenIdToOwnerAddress[1];
+        } else {
+            /*
+            payable(tokenIdToOwnerAddress[0]).transfer(250000000000000000);
+            payable(tokenIdToOwnerAddress[1]).transfer(250000000000000000);
+            */
+            resultAddress = address(this);
         }
 
-        /*
-        uint256 res;
         for (uint256 i = 0; i < tokenIdsForBattleAmount; i + 2) {
             if (tokenIdsForBattleAmount > i + 1) {
                 forBattle[tokenIdsForBattle[i + 1]] = false;
-                /*
+
                 res = battle(
                     tokenIdsForBattle[i],
                     tokenIdsForBattle[i + 1],
                     randomStatIndexes
                 );
-                
             }
             forBattle[tokenIdsForBattle[i]] = false;
         }
@@ -265,6 +278,8 @@ contract YourCollectible is ERC721, VRFConsumerBase {
         uint256 battleNum = 0;
         uint256 statsMatchupsLength = 3;
         for (uint256 i = 0; i < statsMatchupsLength; i++) {
+            // if (battleNum == 2) return battleNum;
+            //if (battleNum == -2) return battleNum;
             if (statMatchups[i] == 0) {
                 res = compareStat(
                     tokenIdToStats[warrior1TokenId].strength,
