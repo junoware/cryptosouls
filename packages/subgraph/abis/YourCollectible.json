@@ -16,19 +16,19 @@
       {
         "indexed": true,
         "internalType": "address",
-        "name": "_owner",
+        "name": "owner",
         "type": "address"
       },
       {
         "indexed": true,
         "internalType": "address",
-        "name": "_approved",
+        "name": "approved",
         "type": "address"
       },
       {
         "indexed": true,
         "internalType": "uint256",
-        "name": "_tokenId",
+        "name": "tokenId",
         "type": "uint256"
       }
     ],
@@ -184,7 +184,7 @@
     ],
     "name": "enlistForBattle",
     "outputs": [],
-    "stateMutability": "nonpayable",
+    "stateMutability": "payable",
     "type": "function"
   },
   {
@@ -413,6 +413,19 @@
     "type": "function"
   },
   {
+    "inputs": [],
+    "name": "result",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
         "internalType": "address",
@@ -579,82 +592,6 @@
         "type": "uint256"
       }
     ],
-    "name": "tokenIdToCharisma",
-    "outputs": [
-      {
-        "internalType": "uint8",
-        "name": "",
-        "type": "uint8"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "name": "tokenIdToEndurance",
-    "outputs": [
-      {
-        "internalType": "uint8",
-        "name": "",
-        "type": "uint8"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "name": "tokenIdToIntelligence",
-    "outputs": [
-      {
-        "internalType": "uint8",
-        "name": "",
-        "type": "uint8"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "name": "tokenIdToLuck",
-    "outputs": [
-      {
-        "internalType": "uint8",
-        "name": "",
-        "type": "uint8"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
     "name": "tokenIdToOwnerAddress",
     "outputs": [
       {
@@ -674,11 +611,31 @@
         "type": "uint256"
       }
     ],
-    "name": "tokenIdToStrength",
+    "name": "tokenIdToStats",
     "outputs": [
       {
         "internalType": "uint8",
-        "name": "",
+        "name": "strength",
+        "type": "uint8"
+      },
+      {
+        "internalType": "uint8",
+        "name": "intelligence",
+        "type": "uint8"
+      },
+      {
+        "internalType": "uint8",
+        "name": "endurance",
+        "type": "uint8"
+      },
+      {
+        "internalType": "uint8",
+        "name": "charisma",
+        "type": "uint8"
+      },
+      {
+        "internalType": "uint8",
+        "name": "luck",
         "type": "uint8"
       }
     ],

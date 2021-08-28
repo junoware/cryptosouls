@@ -18,6 +18,7 @@ contract YourCollectible is ERC721, VRFConsumerBase {
     uint256 internal fee;
     address internal ownerAddress;
     bool public isSpawning;
+    uint256 public result;
 
     // string[] public debugStrings;
 
@@ -26,12 +27,6 @@ contract YourCollectible is ERC721, VRFConsumerBase {
         WAR2,
         TIE
     }
-
-    event Approval(
-        address indexed _owner,
-        address indexed _approved,
-        uint256 indexed _tokenId
-    );
 
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIds;
@@ -74,16 +69,15 @@ contract YourCollectible is ERC721, VRFConsumerBase {
 
     mapping(uint256 => address) public tokenIdToOwnerAddress;
 
-    // strength
-    mapping(uint256 => uint8) public tokenIdToStrength;
-    // intelligence
-    mapping(uint256 => uint8) public tokenIdToIntelligence;
-    // endurance
-    mapping(uint256 => uint8) public tokenIdToEndurance;
-    // charisma
-    mapping(uint256 => uint8) public tokenIdToCharisma;
-    // luck
-    mapping(uint256 => uint8) public tokenIdToLuck;
+    struct Stats {
+        uint8 strength;
+        uint8 intelligence;
+        uint8 endurance;
+        uint8 charisma;
+        uint8 luck;
+    }
+
+    mapping(uint256 => Stats) public tokenIdToStats;
 
     uint256 public tokenIdsForBattleAmount;
     uint256[] public tokenIdsForBattle;
@@ -149,13 +143,21 @@ contract YourCollectible is ERC721, VRFConsumerBase {
 
             uint256 newItemId = tokenCounter;
             uint256[] memory randomNumbers = expand(randomness, 5);
-            tokenIdToStrength[newItemId] = uint8((randomNumbers[0] % 100) + 1);
-            tokenIdToIntelligence[newItemId] = uint8(
+            tokenIdToStats[newItemId].strength = uint8(
+                (randomNumbers[0] % 100) + 1
+            );
+            tokenIdToStats[newItemId].intelligence = uint8(
                 (randomNumbers[1] % 100) + 1
             );
-            tokenIdToEndurance[newItemId] = uint8((randomNumbers[2] % 100) + 1);
-            tokenIdToCharisma[newItemId] = uint8((randomNumbers[3] % 100) + 1);
-            tokenIdToLuck[newItemId] = uint8((randomNumbers[4] % 100) + 1);
+            tokenIdToStats[newItemId].endurance = uint8(
+                (randomNumbers[2] % 100) + 1
+            );
+            tokenIdToStats[newItemId].charisma = uint8(
+                (randomNumbers[3] % 100) + 1
+            );
+            tokenIdToStats[newItemId].luck = uint8(
+                (randomNumbers[4] % 100) + 1
+            );
 
             bytes32 uriHash = keccak256(abi.encodePacked(tokenURI));
 
@@ -176,8 +178,10 @@ contract YourCollectible is ERC721, VRFConsumerBase {
     /**
      * Put the token on the battle list!
      */
-    function enlistForBattle(uint256 tokenId) public {
+    function enlistForBattle(uint256 tokenId) public payable {
         require(forBattle[tokenId] == false, "WARRIOR ALREADY ENLISTED");
+        require(msg.value == 50000000000000000, "NOT ENOUGH ETHER SENT");
+
         bool inBattleArray = false;
         for (uint256 j = 0; j < tokenIdsForBattle.length; j++) {
             if (tokenIdsForBattle[j] == tokenId) {
@@ -189,15 +193,8 @@ contract YourCollectible is ERC721, VRFConsumerBase {
             tokenIdsForBattleAmount = tokenIdsForBattle.length;
             forBattle[tokenId] = true;
         }
+        tokenIdToOwnerAddress[tokenId] = msg.sender;
     }
-
-    /*
-        safeTransferFrom(
-            tokenIdToOwnerAddress[tokenId],
-            address(this),
-            tokenId
-        );
-        */
 
     /**
      * Start and manage the battle arena!
@@ -219,22 +216,13 @@ contract YourCollectible is ERC721, VRFConsumerBase {
             tokenIdsForBattle[1],
             randomStatIndexes
         );
-
+        result = res;
         if (res > 0) {
-            safeTransferFrom(
-                tokenIdToOwnerAddress[tokenIdsForBattle[0]],
-                tokenIdToOwnerAddress[tokenIdsForBattle[1]],
-                tokenIdsForBattle[0]
-            );
-            tokenIdToOwnerAddress[0] = tokenIdToOwnerAddress[1];
+            payable(tokenIdToOwnerAddress[0]).transfer(50000000000000000);
         } else if (res < 0) {
-            safeTransferFrom(
-                tokenIdToOwnerAddress[tokenIdsForBattle[1]],
-                tokenIdToOwnerAddress[tokenIdsForBattle[0]],
-                tokenIdsForBattle[1]
-            );
-            tokenIdToOwnerAddress[1] = tokenIdToOwnerAddress[0];
+            payable(tokenIdToOwnerAddress[1]).transfer(50000000000000000);
         }
+
         /*
         uint256 res;
         for (uint256 i = 0; i < tokenIdsForBattleAmount; i + 2) {
@@ -279,28 +267,28 @@ contract YourCollectible is ERC721, VRFConsumerBase {
         for (uint256 i = 0; i < statsMatchupsLength; i++) {
             if (statMatchups[i] == 0) {
                 res = compareStat(
-                    tokenIdToStrength[warrior1TokenId],
-                    tokenIdToStrength[warrior2TokenId]
+                    tokenIdToStats[warrior1TokenId].strength,
+                    tokenIdToStats[warrior2TokenId].strength
                 );
             } else if (statMatchups[i] == 1) {
                 res = compareStat(
-                    tokenIdToIntelligence[warrior1TokenId],
-                    tokenIdToIntelligence[warrior2TokenId]
+                    tokenIdToStats[warrior1TokenId].intelligence,
+                    tokenIdToStats[warrior2TokenId].intelligence
                 );
             } else if (statMatchups[i] == 2) {
                 res = compareStat(
-                    tokenIdToEndurance[warrior1TokenId],
-                    tokenIdToEndurance[warrior2TokenId]
+                    tokenIdToStats[warrior1TokenId].endurance,
+                    tokenIdToStats[warrior2TokenId].endurance
                 );
             } else if (statMatchups[i] == 3) {
                 res = compareStat(
-                    tokenIdToCharisma[warrior1TokenId],
-                    tokenIdToCharisma[warrior2TokenId]
+                    tokenIdToStats[warrior1TokenId].charisma,
+                    tokenIdToStats[warrior2TokenId].charisma
                 );
             } else if (statMatchups[i] == 4) {
                 res = compareStat(
-                    tokenIdToLuck[warrior1TokenId],
-                    tokenIdToLuck[warrior2TokenId]
+                    tokenIdToStats[warrior1TokenId].luck,
+                    tokenIdToStats[warrior2TokenId].luck
                 );
             }
 
