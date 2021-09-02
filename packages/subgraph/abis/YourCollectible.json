@@ -417,9 +417,9 @@
     "name": "result",
     "outputs": [
       {
-        "internalType": "uint256",
+        "internalType": "enum YourCollectible.BattleWinner",
         "name": "",
-        "type": "uint256"
+        "type": "uint8"
       }
     ],
     "stateMutability": "view",
@@ -530,7 +530,7 @@
     ],
     "name": "startBattleArena",
     "outputs": [],
-    "stateMutability": "payable",
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {

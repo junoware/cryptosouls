@@ -45,6 +45,8 @@ const ipfsAPI = require("ipfs-http-client");
 
 const master = 0x82c0ec5a84c5487f57b1d6386c0002e8e253910c;
 
+const BATTLECOST = 700000;
+
 const ipfs = ipfsAPI({ host: "ipfs.infura.io", port: "5001", protocol: "https" });
 
 console.log("📦 Assets: ", assets);
@@ -723,7 +725,7 @@ function App(props) {
                               onClick={() => {
                                 console.log("enlistForBattle");
                                 console.log("writeContracts", writeContracts);
-                                tx(writeContracts.YourCollectible.enlistForBattle(id, { value: "50000000000000000" }));
+                                tx(writeContracts.YourCollectible.enlistForBattle(id, { value: BATTLECOST }));
                               }}
                             >
                               Send {item.name} to Battle!

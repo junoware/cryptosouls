@@ -18,7 +18,6 @@ contract YourCollectible is ERC721, VRFConsumerBase {
     uint256 internal fee;
     address internal ownerAddress;
     bool public isSpawning;
-    uint256 public result;
     address public resultAddress;
 
     // string[] public debugStrings;
@@ -28,6 +27,8 @@ contract YourCollectible is ERC721, VRFConsumerBase {
         WAR2,
         TIE
     }
+
+    BattleWinner public result;
 
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIds;
@@ -64,6 +65,8 @@ contract YourCollectible is ERC721, VRFConsumerBase {
 
     //this marks an item in IPFS as "forbattle"
     mapping(uint256 => bool) public forBattle;
+
+    uint256 private BATTLECOST = 700000; // normally 50000000000000000
 
     //this lets you look up a token by the uri (assuming there is only one of each uri for now)
     // mapping(bytes32 => uint256) public uriToTokenId;
@@ -181,7 +184,7 @@ contract YourCollectible is ERC721, VRFConsumerBase {
      */
     function enlistForBattle(uint256 tokenId) public payable {
         require(forBattle[tokenId] == false, "WARRIOR ALREADY ENLISTED");
-        require(msg.value == 50000000000000000, "INCORRECT ETHER AMOUNT SENT");
+        require(msg.value == BATTLECOST, "INCORRECT ETHER AMOUNT SENT");
 
         bool inBattleArray = false;
         for (uint256 j = 0; j < tokenIdsForBattle.length; j++) {
@@ -212,42 +215,35 @@ contract YourCollectible is ERC721, VRFConsumerBase {
             randomNumbers[randomNumbersLength - 2] % 5,
             randomNumbers[randomNumbersLength - 3] % 5
         ];
-        uint256 res = battle(
-            tokenIdsForBattle[0],
-            tokenIdsForBattle[1],
-            randomStatIndexes
-        );
-
-        result = res;
-        if (res > 0) {
-            (bool success, ) = tokenIdToOwnerAddress[0].call{
-                value: 90000000000000000
-            }("");
-            require(success, "Transfer failed.");
-            resultAddress = tokenIdToOwnerAddress[0];
-        } else if (res < 0) {
-            (bool success, ) = tokenIdToOwnerAddress[1].call{
-                value: 90000000000000000
-            }("");
-            require(success, "Transfer failed.");
-            resultAddress = tokenIdToOwnerAddress[1];
-        } else {
-            /*
-            payable(tokenIdToOwnerAddress[0]).transfer(250000000000000000);
-            payable(tokenIdToOwnerAddress[1]).transfer(250000000000000000);
-            */
-            resultAddress = address(this);
-        }
 
         for (uint256 i = 0; i < tokenIdsForBattleAmount; i + 2) {
             if (tokenIdsForBattleAmount > i + 1) {
                 forBattle[tokenIdsForBattle[i + 1]] = false;
 
-                res = battle(
+                BattleWinner res = battle(
                     tokenIdsForBattle[i],
                     tokenIdsForBattle[i + 1],
                     randomStatIndexes
                 );
+                result = res;
+
+                if (res == BattleWinner.WAR1) {
+                    (bool success, ) = tokenIdToOwnerAddress[
+                        tokenIdsForBattle[0]
+                    ].call{value: ((BATTLECOST * 2) * 9) / 10}("");
+                    require(success, "Transfer failed.");
+                    resultAddress = tokenIdToOwnerAddress[0];
+                } else if (res == BattleWinner.WAR2) {
+                    (bool success, ) = tokenIdToOwnerAddress[1].call{
+                        value: ((BATTLECOST * 2) * 9) / 10
+                    }("");
+                    require(success, "Transfer failed.");
+                    resultAddress = tokenIdToOwnerAddress[1];
+                } else {
+                    // payable(tokenIdToOwnerAddress[0]).transfer(250000000000000000);
+                    // payable(tokenIdToOwnerAddress[1]).transfer(250000000000000000);
+                    resultAddress = address(this);
+                }
             }
             forBattle[tokenIdsForBattle[i]] = false;
         }
@@ -260,10 +256,12 @@ contract YourCollectible is ERC721, VRFConsumerBase {
         }
         // delete tokenIdsForBattle;
         */
-
+        /*
         for (uint256 i = 0; i < tokenIdsForBattleAmount; i++) {
             forBattle[tokenIdsForBattle[i]] = false;
         }
+        */
+
         tokenIdsForBattleAmount = 0;
         tokenIdsForBattle = new uint256[](0);
     }
@@ -272,10 +270,11 @@ contract YourCollectible is ERC721, VRFConsumerBase {
         uint256 warrior1TokenId,
         uint256 warrior2TokenId,
         uint256[3] memory statMatchups
-    ) internal returns (uint256 result) {
+    ) internal returns (BattleWinner result) {
         // run a for-loop where we compare different stats against each other
         BattleWinner res;
-        uint256 battleNum = 0;
+        uint256 warrior1Wins = 0;
+        uint256 warrior2Wins = 0;
         uint256 statsMatchupsLength = 3;
         for (uint256 i = 0; i < statsMatchupsLength; i++) {
             // if (battleNum == 2) return battleNum;
@@ -307,10 +306,15 @@ contract YourCollectible is ERC721, VRFConsumerBase {
                 );
             }
 
-            if (res == BattleWinner.WAR1) battleNum += 1;
-            else if (res == BattleWinner.WAR2) battleNum -= 1;
+            if (res == BattleWinner.WAR1) warrior1Wins += 1;
+            else if (res == BattleWinner.WAR2) warrior2Wins += 1;
         }
-        return battleNum;
+
+        BattleWinner winner;
+        if (warrior1Wins > warrior2Wins) winner = BattleWinner.WAR1;
+        else if (warrior1Wins < warrior2Wins) winner = BattleWinner.WAR2;
+        else winner = BattleWinner.TIE;
+        return winner;
     }
 
     function compareStat(uint256 warrior1Stat, uint256 warrior2Stat)
