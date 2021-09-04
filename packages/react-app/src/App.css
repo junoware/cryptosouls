@@ -1,5 +1,5 @@
 .App {
-  background-color: #212121;
+  background-color: black;
   text-align: center;
 }
 
@@ -15,3 +15,26 @@
   color: lightcoral;
 }
 
+.title-label {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 100px;
+  text-align: bottom;
+}
+
+.title-text {
+  vertical-align: bottom;
+}
+
+.btn-primary {
+  background-color: #1a1a1a !important;
+  border-color: darkgray !important;
+}
+
+.btn-primary:focus {
+  outline-color: green;
+}
+
+.ant-menu {
+  background-color: black !important;
+  border-bottom: 0px !important;
+}

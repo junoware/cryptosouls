@@ -491,7 +491,6 @@ function App(props) {
   return (
     <div className="App">
       {/* ✏️ Edit the header and change the title to your project name */}
-      <Header />
       <div style={{ display: "none !important" }}>{networkDisplay}</div>
       <BrowserRouter>
         <Menu style={{ textAlign: "center" }} selectedKeys={[route]} mode="horizontal">
@@ -525,36 +524,7 @@ function App(props) {
               Collection
             </Link>
           </Menu.Item>
-          <Menu.Item key="/transfers">
-            <Link
-              onClick={() => {
-                setRoute("/transfers");
-              }}
-              to="/transfers"
-            >
-              Transfers
-            </Link>
-          </Menu.Item>
-          <Menu.Item key="/ipfsup">
-            <Link
-              onClick={() => {
-                setRoute("/ipfsup");
-              }}
-              to="/ipfsup"
-            >
-              IPFS Upload
-            </Link>
-          </Menu.Item>
-          <Menu.Item key="/ipfsdown">
-            <Link
-              onClick={() => {
-                setRoute("/ipfsdown");
-              }}
-              to="/ipfsdown"
-            >
-              IPFS Download
-            </Link>
-          </Menu.Item>
+         
           <Menu.Item key="/debugcontracts">
             <Link
               onClick={() => {
@@ -578,15 +548,11 @@ function App(props) {
               <div
                 style={{ margin: "auto", marginTop: "50px", marginBottom: "40px", contain: "content", width: "70%" }}
               >
-                <div style={{ marginTop: "20px", marginBottom: "24px" }}>
+                <div style={{ marginTop: "20px", marginBottom: "64px" }}>
                   <h2 className="title-label">
-                    <b>Summon NFT Warriors & Battle for Glory in CryptoSouls</b>
+                    <img alt="" src="images/soul.svg" type="image" style={{ height: "180px", marginRight: "8px" }} />
+                    <span className="title-text">CryptoSouls</span>
                   </h2>
-                </div>
-                <div style={{ width: "100%" }}>
-                  <img alt="" src="images/soul.svg" type="image" style={{ height: "240px" }} />
-                  <img alt="" src="images/soul.svg" type="image" style={{ height: "240px" }} />
-                  <img alt="" src="images/soul.svg" type="image" style={{ height: "240px" }} />
                 </div>
                 <div style={{ margin: "24px" }}>
                   <button
@@ -768,23 +734,7 @@ function App(props) {
             </div>
           </Route>
 
-          <Route path="/transfers">
-            <div style={{ width: 600, margin: "auto", marginTop: 32, paddingBottom: 32 }}>
-              <List
-                bordered
-                dataSource={transferEvents}
-                renderItem={item => {
-                  return (
-                    <List.Item key={item[0] + "_" + item[1] + "_" + item.blockNumber + "_" + item[2].toNumber()}>
-                      <span style={{ fontSize: 16, marginRight: 8 }}>#{item[2].toNumber()}</span>
-                      <Address address={item[0]} ensProvider={mainnetProvider} fontSize={16} /> =&gt;
-                      <Address address={item[1]} ensProvider={mainnetProvider} fontSize={16} />
-                    </List.Item>
-                  );
-                }}
-              />
-            </div>
-          </Route>
+         
 
           <Route path="/ipfsup">
             <div style={{ paddingTop: 32, width: 740, margin: "auto", textAlign: "left" }}>
@@ -827,38 +777,6 @@ function App(props) {
             </Button>
 
             <div style={{ padding: 16, paddingBottom: 150 }}>{ipfsHash}</div>
-          </Route>
-          <Route path="/ipfsdown">
-            <div style={{ paddingTop: 32, width: 740, margin: "auto" }}>
-              <Input
-                value={ipfsDownHash}
-                placeHolder="IPFS hash (like QmadqNw8zkdrrwdtPFK1pLi8PPxmkQ4pDJXY8ozHtz6tZq)"
-                onChange={e => {
-                  setIpfsDownHash(e.target.value);
-                }}
-              />
-            </div>
-            <Button
-              style={{ margin: 8 }}
-              loading={sending}
-              size="large"
-              shape="round"
-              type="primary"
-              onClick={async () => {
-                console.log("DOWNLOADING...", ipfsDownHash);
-                setDownloading(true);
-                setIpfsContent();
-                const result = await getFromIPFS(ipfsDownHash); // addToIPFS(JSON.stringify(yourJSON))
-                if (result && result.toString) {
-                  setIpfsContent(result.toString());
-                }
-                setDownloading(false);
-              }}
-            >
-              Download from IPFS
-            </Button>
-
-            <pre style={{ padding: 16, width: 500, margin: "auto", paddingBottom: 150 }}>{ipfsContent}</pre>
           </Route>
           <Route path="/debugcontracts">
             <Contract
