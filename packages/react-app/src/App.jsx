@@ -506,6 +506,7 @@ function App(props) {
           </Menu.Item>
           <Menu.Item key="/">
             <Link
+              id="link-to-gallery"
               onClick={() => {
                 setRoute("/");
               }}
@@ -524,7 +525,6 @@ function App(props) {
               Collection
             </Link>
           </Menu.Item>
-         
           <Menu.Item key="/debugcontracts">
             <Link
               onClick={() => {
@@ -555,17 +555,17 @@ function App(props) {
                   </h2>
                 </div>
                 <div style={{ margin: "24px" }}>
-                  <button
+                  <a
                     style={{ width: "240px", marginTop: "10px" }}
                     onClick={() => {
-                      setRoute("/");
+                      document.getElementById("link-to-gallery").click();
                     }}
                     to="/"
                     type="button"
                     className="btn btn-primary"
                   >
                     <h5 style={{ marginTop: "8px" }}>Start Summoning</h5>
-                  </button>
+                  </a>
                 </div>
               </div>
               <div
@@ -733,8 +733,6 @@ function App(props) {
               />
             </div>
           </Route>
-
-         
 
           <Route path="/ipfsup">
             <div style={{ paddingTop: 32, width: 740, margin: "auto", textAlign: "left" }}>

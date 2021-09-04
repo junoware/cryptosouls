@@ -3,6 +3,14 @@
   text-align: center;
 }
 
+* {
+  font-family: "Cormorant Garamond", serif;
+}
+
+body {
+  background-color: black;
+}
+
 .tier-gold {
   color: gold;
 }
