@@ -149,10 +149,22 @@
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "beginBattleArenaProcess",
-    "outputs": [],
-    "stateMutability": "nonpayable",
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "championTokens",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -526,9 +538,14 @@
         "internalType": "uint256",
         "name": "randomness",
         "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "userWarriorTokenId",
+        "type": "uint256"
       }
     ],
-    "name": "startBattleArena",
+    "name": "startBattle",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -650,38 +667,6 @@
         "internalType": "uint8",
         "name": "luck",
         "type": "uint8"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "name": "tokenIdsForBattle",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "tokenIdsForBattleAmount",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
       }
     ],
     "stateMutability": "view",

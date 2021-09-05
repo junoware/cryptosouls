@@ -34,6 +34,7 @@ contract YourCollectible is ERC721, VRFConsumerBase {
     Counters.Counter private _tokenIds;
 
     uint256 public tokenCounter;
+    uint256[] public championTokens = new uint256[](1);
 
     constructor(bytes32[] memory assetsForSale)
         public
@@ -63,9 +64,7 @@ contract YourCollectible is ERC721, VRFConsumerBase {
     //this marks an item in IPFS as "forsale"
     mapping(bytes32 => bool) public forSale;
 
-    //this marks an item in IPFS as "forbattle"
     mapping(uint256 => bool) public forBattle;
-
     uint256 private BATTLECOST = 700000; // normally 50000000000000000
 
     //this lets you look up a token by the uri (assuming there is only one of each uri for now)
@@ -82,9 +81,6 @@ contract YourCollectible is ERC721, VRFConsumerBase {
     }
 
     mapping(uint256 => Stats) public tokenIdToStats;
-
-    uint256 public tokenIdsForBattleAmount;
-    uint256[] public tokenIdsForBattle;
 
     function expand(uint256 randomValue, uint256 n)
         public
@@ -118,6 +114,7 @@ contract YourCollectible is ERC721, VRFConsumerBase {
         emit requestedCollectible(requestId);
     }
 
+    /*
     function beginBattleArenaProcess() public {
         // require(addressToString(msg.sender) == ownerAddress, "NOT OWNER");
         isSpawning = false;
@@ -125,7 +122,9 @@ contract YourCollectible is ERC721, VRFConsumerBase {
         uint256 seed = uint256(msg.sender);
         bytes32 requestId = requestRandomness(keyHash, fee, seed);
         requestIdToSender[requestId] = msg.sender;
+        requestIdToTokenId[requestId] = msg.sender;
     }
+    */
 
     /**
      * Callback function used by VRF Coordinator
@@ -136,16 +135,15 @@ contract YourCollectible is ERC721, VRFConsumerBase {
     {
         // require(requestIdToSender[requestId] != 0, "NO RAND REQUEST");
         address owner = requestIdToSender[requestId];
-
         // if sender is the contract, do battle!
 
         if (!isSpawning) {
             // debugStrings.push("got past the isSpawning check");
-            startBattleArena(randomness);
+            startBattle(randomness, requestIdToTokenId[requestId]);
         } else {
             string memory tokenURI = requestIdToTokenURI[requestId];
 
-            uint256 newItemId = tokenCounter;
+            uint256 newItemId = tokenCounter + 1;
             uint256[] memory randomNumbers = expand(randomness, 5);
             tokenIdToStats[newItemId].strength = uint8(
                 (randomNumbers[0] % 100) + 1
@@ -183,29 +181,32 @@ contract YourCollectible is ERC721, VRFConsumerBase {
      * Put the token on the battle list!
      */
     function enlistForBattle(uint256 tokenId) public payable {
-        require(forBattle[tokenId] == false, "WARRIOR ALREADY ENLISTED");
         require(msg.value == BATTLECOST, "INCORRECT ETHER AMOUNT SENT");
 
-        bool inBattleArray = false;
-        for (uint256 j = 0; j < tokenIdsForBattle.length; j++) {
-            if (tokenIdsForBattle[j] == tokenId) {
-                inBattleArray = true;
-            }
-        }
-        if (!inBattleArray) {
-            tokenIdsForBattle.push(tokenId);
-            tokenIdsForBattleAmount = tokenIdsForBattle.length;
+        uint256 championTokenAmount = championTokens.length;
+        // first check if any of the spots are open
+        if (championTokens[0] == 0) {
+            championTokens[0] = tokenId;
             forBattle[tokenId] = true;
+            return;
         }
+
         tokenIdToOwnerAddress[tokenId] = msg.sender;
+        // require(addressToString(msg.sender) == ownerAddress, "NOT OWNER");
+        isSpawning = false;
+        uint256 seed = uint256(msg.sender);
+        bytes32 requestId = requestRandomness(keyHash, fee, seed);
+        requestIdToSender[requestId] = msg.sender;
+        forBattle[tokenId] = true;
     }
 
     /**
      * Start and manage the battle arena!
      */
-    function startBattleArena(uint256 randomness) public {
-        require(tokenIdsForBattleAmount > 1, "NOT ENOUGH BATTLE TOKENS");
-        uint256 randomNumbersLength = tokenIdsForBattleAmount + 3;
+    function startBattle(uint256 randomness, uint256 userWarriorTokenId)
+        public
+    {
+        uint256 randomNumbersLength = 4;
         uint256[] memory randomNumbers = expand(
             randomness,
             randomNumbersLength
@@ -216,54 +217,34 @@ contract YourCollectible is ERC721, VRFConsumerBase {
             randomNumbers[randomNumbersLength - 3] % 5
         ];
 
-        for (uint256 i = 0; i < tokenIdsForBattleAmount; i + 2) {
-            if (tokenIdsForBattleAmount > i + 1) {
-                forBattle[tokenIdsForBattle[i + 1]] = false;
+        uint256 championTokenAmount = championTokens.length;
+        uint256 championOpponentToken = randomNumbers[randomNumbersLength - 4] %
+            championTokenAmount;
 
-                BattleWinner res = battle(
-                    tokenIdsForBattle[i],
-                    tokenIdsForBattle[i + 1],
-                    randomStatIndexes
-                );
-                result = res;
+        BattleWinner res = battle(
+            userWarriorTokenId,
+            championOpponentToken,
+            randomStatIndexes
+        );
+        result = res;
 
-                if (res == BattleWinner.WAR1) {
-                    (bool success, ) = tokenIdToOwnerAddress[
-                        tokenIdsForBattle[0]
-                    ].call{value: ((BATTLECOST * 2) * 9) / 10}("");
-                    require(success, "Transfer failed.");
-                    resultAddress = tokenIdToOwnerAddress[0];
-                } else if (res == BattleWinner.WAR2) {
-                    (bool success, ) = tokenIdToOwnerAddress[1].call{
-                        value: ((BATTLECOST * 2) * 9) / 10
-                    }("");
-                    require(success, "Transfer failed.");
-                    resultAddress = tokenIdToOwnerAddress[1];
-                } else {
-                    // payable(tokenIdToOwnerAddress[0]).transfer(250000000000000000);
-                    // payable(tokenIdToOwnerAddress[1]).transfer(250000000000000000);
-                    resultAddress = address(this);
-                }
-            }
-            forBattle[tokenIdsForBattle[i]] = false;
+        if (res == BattleWinner.WAR1) {
+            (bool success, ) = tokenIdToOwnerAddress[userWarriorTokenId].call{
+                value: ((BATTLECOST * 2) * 9) / 10
+            }("");
+            require(success, "Transfer failed.");
+            resultAddress = tokenIdToOwnerAddress[userWarriorTokenId];
+        } else if (res == BattleWinner.WAR2) {
+            (bool success, ) = tokenIdToOwnerAddress[championOpponentToken]
+                .call{value: ((BATTLECOST * 2) * 9) / 10}("");
+            require(success, "Transfer failed.");
+            resultAddress = tokenIdToOwnerAddress[championOpponentToken];
+        } else {
+            // payable(tokenIdToOwnerAddress[0]).transfer(250000000000000000);
+            // payable(tokenIdToOwnerAddress[1]).transfer(250000000000000000);
+            resultAddress = address(this);
         }
-
-        /*
-        delete tokenIdsForBattle;
-        // debugStrings.push("got to the very end! :)");
-        for (uint256 i = 0; i < tokenIdsForBattleAmount; i++) {
-            forBattle[tokenIdsForBattle[i]] = false;
-        }
-        // delete tokenIdsForBattle;
-        */
-        /*
-        for (uint256 i = 0; i < tokenIdsForBattleAmount; i++) {
-            forBattle[tokenIdsForBattle[i]] = false;
-        }
-        */
-
-        tokenIdsForBattleAmount = 0;
-        tokenIdsForBattle = new uint256[](0);
+        forBattle[userWarriorTokenId] = false;
     }
 
     function battle(
@@ -277,8 +258,6 @@ contract YourCollectible is ERC721, VRFConsumerBase {
         uint256 warrior2Wins = 0;
         uint256 statsMatchupsLength = 3;
         for (uint256 i = 0; i < statsMatchupsLength; i++) {
-            // if (battleNum == 2) return battleNum;
-            //if (battleNum == -2) return battleNum;
             if (statMatchups[i] == 0) {
                 res = compareStat(
                     tokenIdToStats[warrior1TokenId].strength,

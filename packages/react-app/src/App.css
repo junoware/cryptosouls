@@ -46,3 +46,7 @@ body {
   background-color: black !important;
   border-bottom: 0px !important;
 }
+
+a {
+  text-decoration: none !important;
+}

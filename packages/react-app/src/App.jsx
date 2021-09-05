@@ -205,6 +205,8 @@ function App(props) {
     "0x34aA3F359A9D614239015126635CE7732c18fDF3",
   ]);
 
+  const championTokens = useContractReader(readContracts, "YourCollectible", "championTokens", []);
+
   // keep track of a variable from the contract in the local React state:
   const balance = useContractReader(readContracts, "YourCollectible", "balanceOf", [address]);
   console.log("🤗 balance:", balance);
@@ -234,9 +236,11 @@ function App(props) {
           const stats = await readContracts.YourCollectible.tokenIdToStats(tokenId);
 
           const inBattle = await readContracts.YourCollectible.forBattle(tokenId);
-
           const ipfsHash = tokenURI.replace("https://ipfs.io/ipfs/", "");
           console.log("ipfsHash", ipfsHash);
+
+          console.log("this is the thing");
+          console.log(championTokens);
 
           const jsonManifestBuffer = await getFromIPFS(ipfsHash);
 
