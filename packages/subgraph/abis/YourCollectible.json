@@ -99,6 +99,19 @@
     "type": "event"
   },
   {
+    "inputs": [],
+    "name": "CurrentContractState",
+    "outputs": [
+      {
+        "internalType": "enum YourCollectible.ContractState",
+        "name": "",
+        "type": "uint8"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
         "internalType": "address",
@@ -281,6 +294,19 @@
     "type": "function"
   },
   {
+    "inputs": [],
+    "name": "getChampionTokens",
+    "outputs": [
+      {
+        "internalType": "uint256[]",
+        "name": "championTokens",
+        "type": "uint256[]"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
         "internalType": "address",
@@ -294,19 +320,6 @@
       }
     ],
     "name": "isApprovedForAll",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "isSpawning",
     "outputs": [
       {
         "internalType": "bool",

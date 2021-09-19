@@ -17,10 +17,16 @@ contract YourCollectible is ERC721, VRFConsumerBase {
     bytes32 internal keyHash;
     uint256 internal fee;
     address internal ownerAddress;
-    bool public isSpawning;
     address public resultAddress;
 
     // string[] public debugStrings;
+
+    enum ContractState {
+        SPAWNING,
+        BATTLING
+    }
+
+    ContractState public CurrentContractState;
 
     enum BattleWinner {
         WAR1,
@@ -51,7 +57,6 @@ contract YourCollectible is ERC721, VRFConsumerBase {
         tokenCounter = 0;
         keyHash = 0x2ed0feb3e7fd2022120aa84fab1945545a9f2ffc9076fd6156fa96eaff4c1311;
         fee = 0.1 * 10**18; // 0.1 LINK
-        isSpawning = false;
         ownerAddress = 0x82C0eC5A84C5487F57B1d6386C0002e8e253910c;
     }
 
@@ -106,25 +111,13 @@ contract YourCollectible is ERC721, VRFConsumerBase {
         public
         returns (bytes32 requestId)
     {
-        isSpawning = true;
+        CurrentContractState = ContractState.SPAWNING;
         uint256 seed = uint256(msg.sender);
         bytes32 requestId = requestRandomness(keyHash, fee, seed);
         requestIdToSender[requestId] = msg.sender;
         requestIdToTokenURI[requestId] = tokenURI;
         emit requestedCollectible(requestId);
     }
-
-    /*
-    function beginBattleArenaProcess() public {
-        // require(addressToString(msg.sender) == ownerAddress, "NOT OWNER");
-        isSpawning = false;
-
-        uint256 seed = uint256(msg.sender);
-        bytes32 requestId = requestRandomness(keyHash, fee, seed);
-        requestIdToSender[requestId] = msg.sender;
-        requestIdToTokenId[requestId] = msg.sender;
-    }
-    */
 
     /**
      * Callback function used by VRF Coordinator
@@ -137,10 +130,9 @@ contract YourCollectible is ERC721, VRFConsumerBase {
         address owner = requestIdToSender[requestId];
         // if sender is the contract, do battle!
 
-        if (!isSpawning) {
-            // debugStrings.push("got past the isSpawning check");
+        if (CurrentContractState == ContractState.BATTLING) {
             startBattle(randomness, requestIdToTokenId[requestId]);
-        } else {
+        } else if (CurrentContractState == ContractState.SPAWNING) {
             string memory tokenURI = requestIdToTokenURI[requestId];
 
             uint256 newItemId = tokenCounter + 1;
@@ -193,7 +185,7 @@ contract YourCollectible is ERC721, VRFConsumerBase {
 
         tokenIdToOwnerAddress[tokenId] = msg.sender;
         // require(addressToString(msg.sender) == ownerAddress, "NOT OWNER");
-        isSpawning = false;
+        CurrentContractState = ContractState.BATTLING;
         uint256 seed = uint256(msg.sender);
         bytes32 requestId = requestRandomness(keyHash, fee, seed);
         requestIdToSender[requestId] = msg.sender;
@@ -227,6 +219,7 @@ contract YourCollectible is ERC721, VRFConsumerBase {
             randomStatIndexes
         );
         result = res;
+        forBattle[userWarriorTokenId] = false;
 
         if (res == BattleWinner.WAR1) {
             (bool success, ) = tokenIdToOwnerAddress[userWarriorTokenId].call{
@@ -244,7 +237,6 @@ contract YourCollectible is ERC721, VRFConsumerBase {
             // payable(tokenIdToOwnerAddress[1]).transfer(250000000000000000);
             resultAddress = address(this);
         }
-        forBattle[userWarriorTokenId] = false;
     }
 
     function battle(
