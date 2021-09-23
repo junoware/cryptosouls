@@ -87,6 +87,12 @@
   },
   {
     "anonymous": false,
+    "inputs": [],
+    "name": "enlistChange",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
     "inputs": [
       {
         "indexed": true,
@@ -291,19 +297,6 @@
       }
     ],
     "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "getChampionTokens",
-    "outputs": [
-      {
-        "internalType": "uint256[]",
-        "name": "championTokens",
-        "type": "uint256[]"
-      }
-    ],
-    "stateMutability": "pure",
     "type": "function"
   },
   {

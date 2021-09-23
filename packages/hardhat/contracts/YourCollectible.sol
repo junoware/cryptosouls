@@ -61,6 +61,7 @@ contract YourCollectible is ERC721, VRFConsumerBase {
     }
 
     event requestedCollectible(bytes32 indexed requestId);
+    event enlistChange();
 
     mapping(bytes32 => address) public requestIdToSender;
     mapping(bytes32 => string) public requestIdToTokenURI;
@@ -180,6 +181,7 @@ contract YourCollectible is ERC721, VRFConsumerBase {
         if (championTokens[0] == 0) {
             championTokens[0] = tokenId;
             forBattle[tokenId] = true;
+            emit enlistChange();
             return;
         }
 
@@ -190,6 +192,7 @@ contract YourCollectible is ERC721, VRFConsumerBase {
         bytes32 requestId = requestRandomness(keyHash, fee, seed);
         requestIdToSender[requestId] = msg.sender;
         forBattle[tokenId] = true;
+        emit enlistChange();
     }
 
     /**
@@ -219,7 +222,6 @@ contract YourCollectible is ERC721, VRFConsumerBase {
             randomStatIndexes
         );
         result = res;
-        forBattle[userWarriorTokenId] = false;
 
         if (res == BattleWinner.WAR1) {
             (bool success, ) = tokenIdToOwnerAddress[userWarriorTokenId].call{
@@ -227,16 +229,20 @@ contract YourCollectible is ERC721, VRFConsumerBase {
             }("");
             require(success, "Transfer failed.");
             resultAddress = tokenIdToOwnerAddress[userWarriorTokenId];
+            forBattle[championOpponentToken] = false;
+            championOpponentToken = userWarriorTokenId;
         } else if (res == BattleWinner.WAR2) {
             (bool success, ) = tokenIdToOwnerAddress[championOpponentToken]
                 .call{value: ((BATTLECOST * 2) * 9) / 10}("");
             require(success, "Transfer failed.");
             resultAddress = tokenIdToOwnerAddress[championOpponentToken];
+            forBattle[userWarriorTokenId] = false;
         } else {
             // payable(tokenIdToOwnerAddress[0]).transfer(250000000000000000);
             // payable(tokenIdToOwnerAddress[1]).transfer(250000000000000000);
             resultAddress = address(this);
         }
+        emit enlistChange();
     }
 
     function battle(

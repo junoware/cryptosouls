@@ -210,6 +210,7 @@ function App(props) {
 
   // 📟 Listen for broadcast events
   const transferEvents = useEventListener(readContracts, "YourCollectible", "Transfer", localProvider, 1);
+  const enlistEvents = useEventListener(readContracts, "YourCollectible", "enlistForBattle", localProvider, 1);
   console.log("📟 Transfer events:", transferEvents);
 
   //
@@ -423,8 +424,10 @@ function App(props) {
       }
       setLoadedAssets(assetUpdate);
     };
-    if (readContracts && readContracts.YourCollectible) updateYourCollectibles();
-  }, [assets, readContracts, transferEvents]);
+    if (readContracts && readContracts.YourCollectible) {
+      updateYourCollectibles();
+    }
+  }, [assets, readContracts, transferEvents, enlistEvents]);
 
   const galleryList = [];
   for (const a in loadedAssets) {

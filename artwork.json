@@ -41,7 +41,12 @@
   },
   {
     "name": "Musashi",
-    "external_url": "https://www.junoware.com/wp-content/uploads/2021/07/soul.svg",
-    "image": "https://www.junoware.com/wp-content/uploads/2021/07/soul.svg"
+    "external_url": "https://www.junoware.com/wp-content/uploads/2021/09/musashi.png",
+    "image": "https://www.junoware.com/wp-content/uploads/2021/09/musashi.png"
+  },
+  {
+    "name": "Leonidas",
+    "external_url": "https://www.junoware.com/wp-content/uploads/2021/09/leonidas.jpg",
+    "image": "https://www.junoware.com/wp-content/uploads/2021/09/leonidas.jpg"
   }
 ]
