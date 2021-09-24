@@ -7,13 +7,41 @@ const R = require("ramda");
 const ipfsAPI = require('ipfs-http-client');
 const ipfs = ipfsAPI({host: 'ipfs.infura.io', port: '5001', protocol: 'https' })
 
+const warriors = [
+  { name: "Achilles", image: "https://www.junoware.com/wp-content/uploads/2021/07/soul.svg"},
+  { name: "Genghis Khan", image: "https://www.junoware.com/wp-content/uploads/2021/07/soul.svg"},
+  { name: "Vlad the Impaler", image: "https://www.junoware.com/wp-content/uploads/2021/07/soul.svg"},
+  { name: "Spartacus", image: "https://www.junoware.com/wp-content/uploads/2021/07/soul.svg"},
+  { name: "Count Roland", image: "https://www.junoware.com/wp-content/uploads/2021/07/soul.svg"},
+  { name: "Attila the Hun", image: "https://www.junoware.com/wp-content/uploads/2021/07/soul.svg"},
+  { name: "William Wallace", image: "https://www.junoware.com/wp-content/uploads/2021/07/soul.svg"},
+  { name: "Alaric the Visigoth", image: "https://www.junoware.com/wp-content/uploads/2021/07/soul.svg"},
+  { name: "Musashi", image: "https://www.junoware.com/wp-content/uploads/2021/07/soul.svg"},
+  { name: "Leonidas", image: "https://www.junoware.com/wp-content/uploads/2021/07/soul.svg"} ];
+  
 const main = async () => {
 
   let allAssets = {}
+  const TOKEN_MINT_AMOUNT = 5;
 
   console.log("\n\n Loading artwork.json...\n");
-  const artwork = JSON.parse(fs.readFileSync("../../artwork.json").toString())
-
+  let artwork = JSON.parse(fs.readFileSync("../../artwork.json").toString())
+  const warriorUses = new Array(warriors.length);
+  warriorUses.fill(0);
+  let artworkString = "[";
+  for (let i=0; i < TOKEN_MINT_AMOUNT; i++) {
+    if (i != 0) artworkString += ",";
+    const warriorMetadataNum = parseInt((Math.random() * (warriors.length)), 10) + 0;
+    warriorUses[warriorMetadataNum]++;
+    const currentNum = warriorUses[warriorMetadataNum];
+    artworkString += `{
+      "name": "${warriors[warriorMetadataNum].name}${currentNum == 1 ? "" : ` ${currentNum}`}",
+      "external_url": "${warriors[warriorMetadataNum].image}",
+      "image": "${warriors[warriorMetadataNum].image}"
+    }`;
+  }
+  artworkString += "]";
+  artwork = JSON.parse(artworkString.toString());
   for(let a in artwork){
     console.log("  Uploading "+artwork[a].name+"...")
     const stringJSON = JSON.stringify(artwork[a])
