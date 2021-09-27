@@ -468,19 +468,7 @@ function App(props) {
         style={{ width: 200 }}
         key={loadedAssets[a].name}
         actions={cardActions}
-        title={
-          <div>
-            {loadedAssets[a].name}{" "}
-            <a
-              style={{ cursor: "pointer", opacity: 0.33 }}
-              href={loadedAssets[a].external_url}
-              target="_blank"
-              rel="noreferrer"
-            >
-              <LinkOutlined />
-            </a>
-          </div>
-        }
+        title={<div>{loadedAssets[a].name} </div>}
       >
         <img style={{ maxWidth: 130 }} src={loadedAssets[a].image} alt="" />
         <div style={{ opacity: 0.77 }}>{loadedAssets[a].description}</div>
@@ -627,6 +615,14 @@ function App(props) {
                 this <Contract/> component will automatically parse your ABI
                 and give you a form to interact with it locally
             */}
+            <br />
+            <br />
+            <h1>Gallery</h1>
+            <br />
+            <h6>CryptoSouls are minted from metadata on IPFS. When a warrior is summoned/minted, it gets stats. </h6>
+            <h6>
+              All warrior typeshave the <u>same chance</u> of higher and lower stats.
+            </h6>
             <div style={{ maxWidth: "60%", margin: "auto", marginTop: 32, paddingBottom: 256 }}>
               <StackGrid columnWidth={200} gutterWidth={16} gutterHeight={16}>
                 {galleryList}
@@ -679,54 +675,26 @@ function App(props) {
                             {stat.value} — {stat.name}
                           </h6>
                         ))}
-                        {item.inBattle === true ? (
-                          <div>
-                            <br />
-                            <h4>Awaiting Battle</h4>
-                          </div>
-                        ) : (
-                          <div>
-                            <br />
-                            <Button
-                              onClick={() => {
-                                console.log("enlistForBattle");
-                                console.log("writeContracts", writeContracts);
-                                tx(writeContracts.YourCollectible.enlistForBattle(id, { value: BATTLECOST }));
-                              }}
-                            >
-                              Send {item.name} to Battle!
-                            </Button>
-                          </div>
-                        )}
                       </div>
-
-                      <div>
-                        owner:{" "}
-                        <Address
-                          address={item.owner}
-                          ensProvider={mainnetProvider}
-                          blockExplorer={blockExplorer}
-                          fontSize={16}
-                        />
-                        <AddressInput
-                          ensProvider={mainnetProvider}
-                          placeholder="transfer to address"
-                          value={transferToAddresses[id]}
-                          onChange={newValue => {
-                            const update = {};
-                            update[id] = newValue;
-                            setTransferToAddresses({ ...transferToAddresses, ...update });
-                          }}
-                        />
-                        <Button
-                          onClick={() => {
-                            console.log("writeContracts", writeContracts);
-                            tx(writeContracts.YourCollectible.transferFrom(address, transferToAddresses[id], id));
-                          }}
-                        >
-                          Transfer
-                        </Button>
-                      </div>
+                      {item.inBattle === true ? (
+                        <div>
+                          <h4>Awaiting Battle</h4>
+                        </div>
+                      ) : (
+                        <div>
+                          <Button
+                            className="send-to-battle-button"
+                            onClick={() => {
+                              console.log("enlistForBattle");
+                              console.log("writeContracts", writeContracts);
+                              tx(writeContracts.YourCollectible.enlistForBattle(id, { value: BATTLECOST }));
+                            }}
+                          >
+                            Send {item.name} to Battle!
+                          </Button>
+                        </div>
+                      )}
+                      <div />
                     </List.Item>
                   );
                 }}
