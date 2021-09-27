@@ -8,21 +8,37 @@ const ipfsAPI = require('ipfs-http-client');
 const ipfs = ipfsAPI({host: 'ipfs.infura.io', port: '5001', protocol: 'https' })
 
 const warriors = [
-  { name: "Achilles", image: "https://www.junoware.com/wp-content/uploads/2021/07/soul.svg"},
-  { name: "Genghis Khan", image: "https://www.junoware.com/wp-content/uploads/2021/07/soul.svg"},
-  { name: "Vlad the Impaler", image: "https://www.junoware.com/wp-content/uploads/2021/07/soul.svg"},
-  { name: "Spartacus", image: "https://www.junoware.com/wp-content/uploads/2021/07/soul.svg"},
-  { name: "Count Roland", image: "https://www.junoware.com/wp-content/uploads/2021/07/soul.svg"},
-  { name: "Attila the Hun", image: "https://www.junoware.com/wp-content/uploads/2021/07/soul.svg"},
-  { name: "William Wallace", image: "https://www.junoware.com/wp-content/uploads/2021/07/soul.svg"},
-  { name: "Alaric the Visigoth", image: "https://www.junoware.com/wp-content/uploads/2021/07/soul.svg"},
-  { name: "Musashi", image: "https://www.junoware.com/wp-content/uploads/2021/07/soul.svg"},
-  { name: "Leonidas", image: "https://www.junoware.com/wp-content/uploads/2021/07/soul.svg"} ];
+  { name: "Achilles", image: "achilles.svg"},
+  { name: "Genghis Khan", image: "genghis-khan.svg"},
+  { name: "Vlad the Impaler", image: "vlad-the-impaler.svg"},
+  { name: "Spartacus", image: "spartacus.svg"},
+  { name: "Sun Tzu", image: "sun-tzu.svg"},
+  { name: "Attila the Hun", image: "attila-the-hun.svg"},
+  { name: "William Wallace", image: "william-wallace.svg"},
+  { name: "Richard the Lionheart", image: "richard-the-lionheart.svg"},
+  { name: "Musashi", image: "musashi.svg"},
+  { name: "Leonidas", image: "leonidas.svg"} ];
   
+const uriRoot = "https://cryptosouls.s3.us-west-2.amazonaws.com/images/";
+
+function romanize (num) {
+  if (isNaN(num))
+      return NaN;
+  var digits = String(+num).split(""),
+      key = ["","C","CC","CCC","CD","D","DC","DCC","DCCC","CM",
+             "","X","XX","XXX","XL","L","LX","LXX","LXXX","XC",
+             "","I","II","III","IV","V","VI","VII","VIII","IX"],
+      roman = "",
+      i = 3;
+  while (i--)
+      roman = (key[+digits.pop() + (i * 10)] || "") + roman;
+  return Array(+digits.join("") + 1).join("M") + roman;
+}
+
 const main = async () => {
 
   let allAssets = {}
-  const TOKEN_MINT_AMOUNT = 5;
+  const TOKEN_MINT_AMOUNT = 20;
 
   console.log("\n\n Loading artwork.json...\n");
   let artwork = JSON.parse(fs.readFileSync("../../artwork.json").toString())
@@ -35,9 +51,9 @@ const main = async () => {
     warriorUses[warriorMetadataNum]++;
     const currentNum = warriorUses[warriorMetadataNum];
     artworkString += `{
-      "name": "${warriors[warriorMetadataNum].name}${currentNum == 1 ? "" : ` ${currentNum}`}",
-      "external_url": "${warriors[warriorMetadataNum].image}",
-      "image": "${warriors[warriorMetadataNum].image}"
+      "name": "${warriors[warriorMetadataNum].name}${currentNum == 1 ? "" : ` ${romanize(currentNum)}`}",
+      "external_url": "${uriRoot}${warriors[warriorMetadataNum].image}",
+      "image": "${uriRoot}${warriors[warriorMetadataNum].image}"
     }`;
   }
   artworkString += "]";
