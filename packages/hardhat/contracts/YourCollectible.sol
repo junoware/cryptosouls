@@ -303,4 +303,14 @@ contract YourCollectible is ERC721, VRFConsumerBase {
         else if (warrior1Stat < warrior2Stat) return BattleWinner.WAR2;
         return BattleWinner.TIE;
     }
+
+    function getBalance() public view returns (uint256) {
+        return address(this).balance;
+    }
+
+    function withdrawMoney() public {
+        require(msg.sender == ownerAddress, "NOT OWNER");
+        address payable to = payable(msg.sender);
+        to.transfer(getBalance());
+    }
 }
