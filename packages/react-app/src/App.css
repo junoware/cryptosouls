@@ -57,7 +57,7 @@ a {
 
 .send-to-battle-button {
   min-width: 200px;
-  min-height: 50px;
+  min-height: 40px;
   border-radius: 20px !important;
   background: linear-gradient(black 100%, darkblue 0%) !important;
   text-decoration: none;

@@ -465,7 +465,7 @@ function App(props) {
 
     galleryList.push(
       <Card
-        style={{ width: 200 }}
+        style={{ width: 200, height: 275}}
         key={loadedAssets[a].name}
         actions={cardActions}
         title={<div>{loadedAssets[a].name} </div>}
@@ -619,9 +619,9 @@ function App(props) {
             <br />
             <h1>Gallery</h1>
             <br />
-            <h6>CryptoSouls are minted from metadata on IPFS. When a warrior is summoned/minted, it gets stats. </h6>
+            <h6>CryptoSouls are minted from metadata on IPFS. When a warrior is summoned / minted, it gets stats. </h6>
             <h6>
-              All warrior typeshave the <u>same chance</u> of higher and lower stats.
+              All warrior types have the <u>same chance</u> of higher <b>and</b> lower stats.
             </h6>
             <div style={{ maxWidth: "60%", margin: "auto", marginTop: 32, paddingBottom: 256 }}>
               <StackGrid columnWidth={200} gutterWidth={16} gutterHeight={16}>
