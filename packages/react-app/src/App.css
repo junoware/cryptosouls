@@ -59,13 +59,14 @@ a {
   min-width: 200px;
   min-height: 40px;
   border-radius: 20px !important;
-  background: linear-gradient(black 100%, darkblue 0%) !important;
+  background: #000039 !important;
   text-decoration: none;
   color: #fff;
   font-weight: bold;
-  padding: 10px 40px;
+  padding: 0px;
   font-size: 24px;
   border: 1px solid #2d6898;
+  border-radius: 0px !important;
 }
 
 .ant-card-body {
