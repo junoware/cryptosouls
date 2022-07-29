@@ -104,8 +104,8 @@ a {
 
 .faq-section {
   width: 65%;
-  margin: auto;
-  margin-top: 100px;
+  margin: 100px auto 10px auto !important;
+  padding-bottom: 40px;
 }
 
 .faq-section-accordian {

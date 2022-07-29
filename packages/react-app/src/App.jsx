@@ -485,54 +485,63 @@ function App(props) {
   return (
     <div className="App">
       {/* ✏️ Edit the header and change the title to your project name */}
-      <div style={{ display: "none !important" }}>{networkDisplay}</div>
       <BrowserRouter>
-        <Menu style={{ textAlign: "center" }} selectedKeys={[route]} mode="horizontal">
-          <Menu.Item key="/home">
-            <Link
-              onClick={() => {
-                setRoute("/home");
-              }}
-              to="/home"
-            >
-              Home
-            </Link>
-          </Menu.Item>
-          <Menu.Item key="/">
-            <Link
-              id="link-to-gallery"
-              onClick={() => {
-                setRoute("/");
-              }}
-              to="/"
-            >
-              Gallery
-            </Link>
-          </Menu.Item>
-          <Menu.Item key="/yourcollectibles">
-            <Link
-              onClick={() => {
-                setRoute("/yourcollectibles");
-              }}
-              to="/yourcollectibles"
-            >
-              Collection
-            </Link>
-          </Menu.Item>
-          <Menu.Item key="/debugcontracts">
-            <Link
-              onClick={() => {
-                setRoute("/debugcontracts");
-              }}
-              to="/debugcontracts"
-            >
-              Debug Contracts
-            </Link>
-          </Menu.Item>
-        </Menu>
+        <Row>
+          <Col span={12} style={{ display: "inline-flex" }}>
+            <Header />
+            <Menu style={{ marginTop: 12 }} selectedKeys={[route]} mode="horizontal">
+              <Menu.Item key="/home">
+                <Link
+                  onClick={() => {
+                    setRoute("/");
+                  }}
+                  to="/"
+                >
+                  Home
+                </Link>
+              </Menu.Item>
+              <Menu.Item key="/gallery">
+                <Link
+                  id="link-to-gallery"
+                  onClick={() => {
+                    setRoute("/");
+                  }}
+                  to="/gallery"
+                >
+                  Gallery
+                </Link>
+              </Menu.Item>
+              <Menu.Item key="/yourcollectibles">
+                <Link
+                  onClick={() => {
+                    setRoute("/yourcollectibles");
+                  }}
+                  to="/yourcollectibles"
+                >
+                  Collection
+                </Link>
+              </Menu.Item>
+              {/*
+              <Menu.Item key="/debugcontracts">
+                <Link
+                  onClick={() => {
+                    setRoute("/debugcontracts");
+                  }}
+                  to="/debugcontracts"
+                >
+                  Debug Contracts
+                </Link>
+              </Menu.Item>
+                */}
+            </Menu>
+          </Col>
+          <Col span={12}>
+            <div>{networkDisplay}</div>
+          </Col>
+        </Row>
 
         <Switch>
-          <Route exact path="/home">
+          <Route exact path="/">
             {/*
                 🎛 this scaffolding is full of commonly used components
                 this <Contract/> component will automatically parse your ABI
@@ -650,7 +659,7 @@ function App(props) {
             </div>
           </Route>
 
-          <Route exact path="/">
+          <Route exact path="/gallery">
             {/*
                 🎛 this scaffolding is full of commonly used components
                 this <Contract/> component will automatically parse your ABI
