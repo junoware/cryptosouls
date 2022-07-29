@@ -5,13 +5,14 @@ pragma solidity >=0.6.0 <0.7.0;
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@chainlink/contracts/src/v0.6/VRFConsumerBase.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 
 //import "@openzeppelin/contracts/access/Ownable.sol";
 //learn more: https://docs.openzeppelin.com/contracts/3.x/erc721
 
 // GET LISTED ON OPENSEA: https://testnets.opensea.io/get-listed/step-two
 
-contract YourCollectible is ERC721, VRFConsumerBase {
+contract YourCollectible is ERC721, VRFConsumerBase, Ownable {
     string internal currentTokenURI;
 
     bytes32 internal keyHash;
@@ -25,6 +26,9 @@ contract YourCollectible is ERC721, VRFConsumerBase {
         SPAWNING,
         BATTLING
     }
+
+    mapping(uint256 => uint256) public championToTokenId;
+    mapping(uint256 => uint256) public championToWinAmount;
 
     ContractState public CurrentContractState;
 
@@ -40,7 +44,8 @@ contract YourCollectible is ERC721, VRFConsumerBase {
     Counters.Counter private _tokenIds;
 
     uint256 public tokenCounter;
-    uint256[] public championTokens = new uint256[](1);
+
+    uint256 private championAmount = 1;
 
     constructor(bytes32[] memory assetsForSale)
         public
@@ -49,6 +54,7 @@ contract YourCollectible is ERC721, VRFConsumerBase {
             0x01BE23585060835E02B77ef475b0Cc51aA1e0709 // LINK Token
         )
         ERC721("CryptoSouls", "CSL")
+        Ownable()
     {
         _setBaseURI("https://ipfs.io/ipfs/");
         for (uint256 i = 0; i < assetsForSale.length; i++) {
@@ -84,6 +90,9 @@ contract YourCollectible is ERC721, VRFConsumerBase {
         uint8 endurance;
         uint8 charisma;
         uint8 luck;
+        uint256 wins;
+        uint256 losses;
+        uint256 ties;
     }
 
     mapping(uint256 => Stats) public tokenIdToStats;
@@ -176,13 +185,15 @@ contract YourCollectible is ERC721, VRFConsumerBase {
     function enlistForBattle(uint256 tokenId) public payable {
         require(msg.value == BATTLECOST, "INCORRECT ETHER AMOUNT SENT");
 
-        uint256 championTokenAmount = championTokens.length;
         // first check if any of the spots are open
-        if (championTokens[0] == 0) {
-            championTokens[0] = tokenId;
-            forBattle[tokenId] = true;
-            emit enlistChange();
-            return;
+        for (uint256 i = 0; i < championAmount; i++) {
+            if (championToTokenId[i] == 0) {
+                championToTokenId[i] = tokenId;
+                championToWinAmount[i] = 0;
+                forBattle[tokenId] = true;
+                emit enlistChange();
+                return;
+            }
         }
 
         tokenIdToOwnerAddress[tokenId] = msg.sender;
@@ -212,9 +223,8 @@ contract YourCollectible is ERC721, VRFConsumerBase {
             randomNumbers[randomNumbersLength - 3] % 5
         ];
 
-        uint256 championTokenAmount = championTokens.length;
         uint256 championOpponentToken = randomNumbers[randomNumbersLength - 4] %
-            championTokenAmount;
+            championAmount;
 
         BattleWinner res = battle(
             userWarriorTokenId,
@@ -230,6 +240,7 @@ contract YourCollectible is ERC721, VRFConsumerBase {
             require(success, "Transfer failed.");
             resultAddress = tokenIdToOwnerAddress[userWarriorTokenId];
             forBattle[championOpponentToken] = false;
+            tokenIdToStats[userWarriorTokenId].wins += 1;
             championOpponentToken = userWarriorTokenId;
         } else if (res == BattleWinner.WAR2) {
             (bool success, ) = tokenIdToOwnerAddress[championOpponentToken]
@@ -237,10 +248,13 @@ contract YourCollectible is ERC721, VRFConsumerBase {
             require(success, "Transfer failed.");
             resultAddress = tokenIdToOwnerAddress[championOpponentToken];
             forBattle[userWarriorTokenId] = false;
+            tokenIdToStats[userWarriorTokenId].losses += 1;
         } else {
             // payable(tokenIdToOwnerAddress[0]).transfer(250000000000000000);
             // payable(tokenIdToOwnerAddress[1]).transfer(250000000000000000);
+            forBattle[userWarriorTokenId] = false;
             resultAddress = address(this);
+            tokenIdToStats[userWarriorTokenId].ties += 1;
         }
         emit enlistChange();
     }
@@ -308,9 +322,8 @@ contract YourCollectible is ERC721, VRFConsumerBase {
         return address(this).balance;
     }
 
-    function withdrawMoney() public {
-        require(msg.sender == ownerAddress, "NOT OWNER");
-        address payable to = payable(msg.sender);
-        to.transfer(getBalance());
+    function withdraw() external onlyOwner {
+        (bool sent, ) = owner().call{value: address(this).balance}("");
+        require(sent, "Failed to send Ether");
     }
 }

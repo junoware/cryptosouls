@@ -2,7 +2,7 @@ import { LinkOutlined } from "@ant-design/icons";
 import { StaticJsonRpcProvider, Web3Provider } from "@ethersproject/providers";
 import { formatEther, parseEther } from "@ethersproject/units";
 import WalletConnectProvider from "@walletconnect/web3-provider";
-import { Alert, Button, Card, Col, Input, List, Menu, Row } from "antd";
+import { Alert, Button, Card, Col, List, Menu, Row, Collapse } from "antd";
 import "antd/dist/antd.css";
 import { useUserAddress } from "eth-hooks";
 import { utils } from "ethers";
@@ -48,6 +48,12 @@ const master = 0x82c0ec5a84c5487f57b1d6386c0002e8e253910c;
 const BATTLECOST = 700000;
 
 const ipfs = ipfsAPI({ host: "ipfs.infura.io", port: "5001", protocol: "https" });
+
+const { Meta } = Card;
+const { Panel } = Collapse;
+
+const soulImage = "images/soul.png";
+const battleImage = "images/swords.png";
 
 console.log("📦 Assets: ", assets);
 
@@ -465,7 +471,7 @@ function App(props) {
 
     galleryList.push(
       <Card
-        style={{ width: 200, height: 275}}
+        style={{ width: 200, height: 275 }}
         key={loadedAssets[a].name}
         actions={cardActions}
         title={<div>{loadedAssets[a].name} </div>}
@@ -533,27 +539,26 @@ function App(props) {
                 and give you a form to interact with it locally
             */}
             <div style={{ width: "100%" }}>
-              <div
-                style={{ margin: "auto", marginTop: "50px", marginBottom: "40px", contain: "content", width: "70%" }}
-              >
+              <div className="header-section">
                 <div style={{ marginTop: "20px", marginBottom: "64px" }}>
                   <h2 className="title-label">
                     <img alt="" src="images/soul.svg" type="image" style={{ height: "180px", marginRight: "8px" }} />
                     <span className="title-text">CryptoSouls</span>
                   </h2>
+                  <img alt="" src="images/banner.png" type="image" style={{ height: "250px" }} />
                 </div>
                 <div style={{ margin: "24px" }}>
-                  <a
-                    style={{ width: "240px", marginTop: "10px" }}
+                  <Button
+                    style={{ padding: "0px 36px" }}
                     onClick={() => {
                       document.getElementById("link-to-gallery").click();
                     }}
-                    to="/"
-                    type="button"
-                    className="btn btn-primary"
+                    type="primary"
+                    shape="round"
+                    size="large"
                   >
-                    <h5 style={{ marginTop: "8px" }}>Start Summoning</h5>
-                  </a>
+                    Start Playing
+                  </Button>
                 </div>
               </div>
               <div
@@ -564,45 +569,81 @@ function App(props) {
                   width: "100%",
                 }}
               >
-                <div
-                  style={{
-                    width: "65%",
-                    margin: "auto",
-                    marginTop: "60px",
-                    marginBottom: "40px",
-                    backgroundColor: "#141414",
-                  }}
-                >
-                  <div style={{ padding: "14px", outline: "1px solid" }}>
-                    <div style={{ float: "left", width: "30%" }}>
-                      <img alt="" src="images/soul.svg" type="image" style={{ height: "160px" }} />
-                    </div>
-                    <div style={{ textAlign: "left", margin: "30px" }}>
-                      <h4>Summon Famous Warriors as NFTs</h4>
-                      <br />
-                      <h6>
-                        Minted CryptoSoul NFTs are given{" "}
-                        <a target="_blank" rel="noreferrer" href="https://chain.link/solutions/chainlink-vrf">
-                          provably-random
-                        </a>{" "}
-                        stats in Strength, Intelligence, Endurance, Charisma and Luck. A CryptoSoul's stats can{" "}
-                        <u>NEVER</u> be changed.
-                      </h6>
-                    </div>
-                  </div>
-                  <div style={{ padding: "14px" }}>
-                    <div style={{ float: "left", width: "30%" }}>
-                      <img alt="" src="images/swords.svg" type="image" style={{ height: "160px" }} />
-                    </div>
-                    <div style={{ textAlign: "left", margin: "30px" }}>
-                      <h4>Win ETH in the Battle Arena</h4>
-                      <br />
-                      <h6>
-                        CryptoSouls can compete in best-of-three battles in the Battle Arena.
-                        <br />
-                        Winning players claim their opponent's Battle Arena buy-in.
-                      </h6>
-                    </div>
+                <div className="site-card-wrapper">
+                  <Row gutter={16}>
+                    <Col span={8}>
+                      <Card
+                        cover={
+                          <img
+                            alt="example"
+                            src={soulImage}
+                            style={{ objectFit: "contain", maxWidth: 200, padding: "10px", margin: "auto" }}
+                          />
+                        }
+                        bordered={false}
+                      >
+                        <h4>Summon Warriors as NFTs</h4>
+                        <p>
+                          CryptoSouls are minted with{" "}
+                          <a target="_blank" rel="noreferrer" href="https://chain.link/solutions/chainlink-vrf">
+                            provably-random
+                          </a>{" "}
+                          stats in Strength, Intelligence, Endurance, Charisma and Luck
+                        </p>
+                      </Card>
+                    </Col>
+                    <Col span={8}>
+                      <Card
+                        cover={
+                          <img
+                            alt="example"
+                            src={battleImage}
+                            style={{ objectFit: "contain", maxWidth: 200, padding: "10px", margin: "auto" }}
+                          />
+                        }
+                        bordered={false}
+                      >
+                        <h4>Compete in the Battle Arena</h4>
+                        <p>CryptoSouls can compete in best-of-three battles in the Battle Arena</p>
+                      </Card>
+                    </Col>
+                    <Col span={8}>
+                      <Card
+                        cover={
+                          <img
+                            alt="example"
+                            src={battleImage}
+                            style={{ objectFit: "contain", maxWidth: 200, padding: "10px", margin: "auto" }}
+                          />
+                        }
+                        bordered={false}
+                      >
+                        <h4>Summon Warriors as NFTs</h4>
+                        <p>
+                          CryptoSouls are minted with{" "}
+                          <a target="_blank" rel="noreferrer" href="https://chain.link/solutions/chainlink-vrf">
+                            provably-random
+                          </a>{" "}
+                          stats in Strength, Intelligence, Endurance, Charisma and Luck
+                        </p>
+                      </Card>
+                    </Col>
+                  </Row>
+                </div>
+                <div className="faq-section">
+                  <h4>Frequently Asked Questions</h4>
+                  <div className="faq-section-accordian">
+                    <Collapse accordion>
+                      <Panel header="This is panel header 1" key="1">
+                        <p>This is text</p>
+                      </Panel>
+                      <Panel header="This is panel header 2" key="2">
+                        <p>This is text</p>
+                      </Panel>
+                      <Panel header="This is panel header 3" key="3">
+                        <p>This is text</p>
+                      </Panel>
+                    </Collapse>
                   </div>
                 </div>
               </div>
@@ -643,6 +684,11 @@ function App(props) {
                     { name: "Endurance", value: item.stats.endurance },
                     { name: "Charisma", value: item.stats.charisma },
                     { name: "Luck", value: item.stats.luck },
+                    /*
+                    { name: "Wins", value: item.stats.wins },
+                    { name: "Losses", value: item.stats.losses },
+                    { name: "Ties", value: item.stats.ties },
+                    */
                   ];
                   return (
                     <List.Item key={id + "_" + item.uri + "_" + item.owner}>

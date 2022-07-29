@@ -101,3 +101,28 @@ a {
   background: white !important;
   */
 }
+
+.faq-section {
+  width: 65%;
+  margin: auto;
+  margin-top: 100px;
+}
+
+.faq-section-accordian {
+  text-align: left;
+  margin: 20px 0px 100px 0px;
+}
+
+.header-section {
+  margin: 60px auto;
+  padding: 30px 0px 60px 0px;
+  contain: content;
+  background: linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(29,29,29,1) 0%, rgba(0,0,0,1) 100%);
+}
+
+.site-card-wrapper {
+    width: 65%;
+    margin: auto;
+    margin-top: 60px;
+    margin-bottom: 40px;
+}
