@@ -1,4 +1,3 @@
-import { LinkOutlined } from "@ant-design/icons";
 import { StaticJsonRpcProvider, Web3Provider } from "@ethersproject/providers";
 import { formatEther, parseEther } from "@ethersproject/units";
 import WalletConnectProvider from "@walletconnect/web3-provider";
@@ -25,6 +24,8 @@ import {
   Ramp,
   ThemeSwitch,
 } from "./components";
+import AppSteps from "./components/AppSteps";
+import FAQ from "./components/FAQ";
 import { DAI_ABI, DAI_ADDRESS, INFURA_ID, NETWORK, NETWORKS } from "./constants";
 import { Transactor } from "./helpers";
 import {
@@ -578,83 +579,8 @@ function App(props) {
                   width: "100%",
                 }}
               >
-                <div className="site-card-wrapper">
-                  <Row gutter={16}>
-                    <Col span={8}>
-                      <Card
-                        cover={
-                          <img
-                            alt="example"
-                            src={soulImage}
-                            style={{ objectFit: "contain", maxWidth: 200, padding: "10px", margin: "auto" }}
-                          />
-                        }
-                        bordered={false}
-                      >
-                        <h4>Summon Warriors as NFTs</h4>
-                        <p>
-                          CryptoSouls are minted with{" "}
-                          <a target="_blank" rel="noreferrer" href="https://chain.link/solutions/chainlink-vrf">
-                            provably-random
-                          </a>{" "}
-                          stats in Strength, Intelligence, Endurance, Charisma and Luck
-                        </p>
-                      </Card>
-                    </Col>
-                    <Col span={8}>
-                      <Card
-                        cover={
-                          <img
-                            alt="example"
-                            src={battleImage}
-                            style={{ objectFit: "contain", maxWidth: 200, padding: "10px", margin: "auto" }}
-                          />
-                        }
-                        bordered={false}
-                      >
-                        <h4>Compete in the Battle Arena</h4>
-                        <p>CryptoSouls can compete in best-of-three battles in the Battle Arena</p>
-                      </Card>
-                    </Col>
-                    <Col span={8}>
-                      <Card
-                        cover={
-                          <img
-                            alt="example"
-                            src={battleImage}
-                            style={{ objectFit: "contain", maxWidth: 200, padding: "10px", margin: "auto" }}
-                          />
-                        }
-                        bordered={false}
-                      >
-                        <h4>Summon Warriors as NFTs</h4>
-                        <p>
-                          CryptoSouls are minted with{" "}
-                          <a target="_blank" rel="noreferrer" href="https://chain.link/solutions/chainlink-vrf">
-                            provably-random
-                          </a>{" "}
-                          stats in Strength, Intelligence, Endurance, Charisma and Luck
-                        </p>
-                      </Card>
-                    </Col>
-                  </Row>
-                </div>
-                <div className="faq-section">
-                  <h4>Frequently Asked Questions</h4>
-                  <div className="faq-section-accordian">
-                    <Collapse accordion>
-                      <Panel header="This is panel header 1" key="1">
-                        <p>This is text</p>
-                      </Panel>
-                      <Panel header="This is panel header 2" key="2">
-                        <p>This is text</p>
-                      </Panel>
-                      <Panel header="This is panel header 3" key="3">
-                        <p>This is text</p>
-                      </Panel>
-                    </Collapse>
-                  </div>
-                </div>
+                <AppSteps />
+                <FAQ />
               </div>
             </div>
           </Route>

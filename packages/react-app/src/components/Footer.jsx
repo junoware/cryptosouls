@@ -43,7 +43,7 @@ export default function Footer() {
         <a href="https://discord.gg/T5NWFVc2vy" rel="noreferrer" target="_blank">
           <img style={{ padding: "0px 4px" }} alt="discord" height={30} src={discordIcon} />
         </a>{" "}
-        <a href="https://twitter.com/will3plan" rel="noreferrer" target="_blank">
+        <a href="https://twitter.com/cryptosoulsnfts" rel="noreferrer" target="_blank">
           <img style={{ padding: "0px 4px" }} alt="twitter" height={25} src={twitterIcon} />
         </a>
       </div>
