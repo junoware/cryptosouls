@@ -537,7 +537,21 @@ function App(props) {
             </Menu>
           </Col>
           <Col span={12}>
-            <div>{networkDisplay}</div>
+            {/* 👨‍💼 Your account is in the top right with a wallet at connect options */}
+            <div style={{ textAlign: "right", right: 0, top: 0, margin: "30px 10px 0px 10px" }}>
+              <Account
+                address={address}
+                localProvider={localProvider}
+                userProvider={userProvider}
+                mainnetProvider={mainnetProvider}
+                price={price}
+                web3Modal={web3Modal}
+                loadWeb3Modal={loadWeb3Modal}
+                logoutOfWeb3Modal={logoutOfWeb3Modal}
+                blockExplorer={blockExplorer}
+              />
+              {faucetHint}
+            </div>
           </Col>
         </Row>
 
@@ -548,7 +562,7 @@ function App(props) {
                 this <Contract/> component will automatically parse your ABI
                 and give you a form to interact with it locally
             */}
-            <div style={{ width: "100%" }}>
+            <div style={{ width: "100%", marginTop: "-60px" }}>
               <div className="header-section">
                 <div style={{ marginTop: "20px", marginBottom: "64px" }}>
                   <h2 className="title-label">
@@ -741,22 +755,6 @@ function App(props) {
       <ThemeSwitch />
             */}
 
-      {/* 👨‍💼 Your account is in the top right with a wallet at connect options */}
-      <div style={{ position: "fixed", textAlign: "right", right: 0, top: 0, padding: 10 }}>
-        <Account
-          address={address}
-          localProvider={localProvider}
-          userProvider={userProvider}
-          mainnetProvider={mainnetProvider}
-          price={price}
-          web3Modal={web3Modal}
-          loadWeb3Modal={loadWeb3Modal}
-          logoutOfWeb3Modal={logoutOfWeb3Modal}
-          blockExplorer={blockExplorer}
-        />
-        {faucetHint}
-      </div>
-
       {/* 🗺 Extra UI like gas price, eth price, faucet, and support: */}
       {/*
       <div style={{ position: "fixed", textAlign: "left", left: 0, bottom: 20, padding: 10 }}>
@@ -787,7 +785,7 @@ function App(props) {
         <Row align="middle" gutter={[4, 4]}>
           <Col span={24}>
             {
-              /*  if the local provider has a signer, let's show the faucet:  *//*
+              /*  if the local provider has a signer, let's show the faucet:
               faucetAvailable ? (
                 <Faucet localProvider={localProvider} price={price} ensProvider={mainnetProvider} />
               ) : (
