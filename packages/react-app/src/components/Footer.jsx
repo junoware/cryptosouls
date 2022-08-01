@@ -40,7 +40,7 @@ export default function Footer() {
         </Col>
       </Row>
       <div style={{ marginBottom: 24 }}>
-        <a href="https://discord.gg/T5NWFVc2vy" rel="noreferrer" target="_blank">
+        <a href="https://discord.gg/yHQWAnp6Y5" rel="noreferrer" target="_blank">
           <img style={{ padding: "0px 4px" }} alt="discord" height={30} src={discordIcon} />
         </a>{" "}
         <a href="https://twitter.com/cryptosoulsnfts" rel="noreferrer" target="_blank">
