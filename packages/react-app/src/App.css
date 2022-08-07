@@ -129,7 +129,7 @@ a {
 
 .header-section {
   margin: 60px auto auto auto;
-  padding: 30px 0px 140px 0px;
+  padding: 80px 0px 100px 0px;
   contain: content;
   background: linear-gradient(0deg, rgba(16, 16, 16, 0.7), rgba(16, 16, 16, 0.7)), url("/images/main-bg-image.png");
   background-size: cover;
