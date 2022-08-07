@@ -69,7 +69,14 @@ export default function Account({
       modalButtons.push(
         <Button
           key="loginbutton"
-          style={{ verticalAlign: "top", marginLeft: 8, marginTop: 4 }}
+          style={{
+            verticalAlign: "top",
+            marginLeft: 8,
+            marginTop: 4,
+            backgroundColor: "#AEEEED !important",
+            background: "#AEEEED !important",
+            color: "white !important",
+          }}
           shape="round"
           size="large"
           /* type={minimized ? "default" : "primary"}     too many people just defaulting to MM and having a bad time */

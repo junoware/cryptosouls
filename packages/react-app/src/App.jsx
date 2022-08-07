@@ -26,6 +26,7 @@ import {
 } from "./components";
 import AppSteps from "./components/AppSteps";
 import FAQ from "./components/FAQ";
+import Warriors from "./components/Warriors";
 import { DAI_ABI, DAI_ADDRESS, INFURA_ID, NETWORK, NETWORKS } from "./constants";
 import { Transactor } from "./helpers";
 import {
@@ -55,6 +56,7 @@ const { Panel } = Collapse;
 
 const soulImage = "images/soul.png";
 const battleImage = "images/swords.png";
+const headerImage = "images/achilles.svg";
 
 console.log("📦 Assets: ", assets);
 
@@ -487,10 +489,13 @@ function App(props) {
     <div className="App">
       {/* ✏️ Edit the header and change the title to your project name */}
       <BrowserRouter>
-        <Row>
-          <Col span={12} style={{ display: "inline-flex" }}>
+        <Row style={{ background: "#272D37", height: 72, alignContent: "center" }}>
+          <Col
+            span={12}
+            style={{ display: "inline-flex", alignContent: "center", backgroundColor: "unset !important" }}
+          >
             <Header />
-            <Menu style={{ marginTop: 28 }} selectedKeys={[route]} mode="horizontal">
+            <Menu style={{ alignSelf: "center" }} selectedKeys={[route]} mode="horizontal">
               <Menu.Item key="/home">
                 <Link
                   onClick={() => {
@@ -538,7 +543,7 @@ function App(props) {
           </Col>
           <Col span={12}>
             {/* 👨‍💼 Your account is in the top right with a wallet at connect options */}
-            <div style={{ textAlign: "right", right: 0, top: 0, margin: "30px 10px 0px 10px" }}>
+            <div style={{ textAlign: "right", right: 0, top: 0, margin: "20px 10px 0px 10px" }}>
               <Account
                 address={address}
                 localProvider={localProvider}
@@ -564,36 +569,69 @@ function App(props) {
             */}
             <div style={{ width: "100%", marginTop: "-60px" }}>
               <div className="header-section">
-                <div style={{ marginTop: "20px", marginBottom: "64px" }}>
-                  <h2 className="title-label">
-                    <img alt="" src="images/soul.svg" type="image" style={{ height: "180px", marginRight: "8px" }} />
-                    <span className="title-text">CryptoSouls</span>
-                  </h2>
-                  <img alt="" src="images/banner.png" type="image" style={{ height: "250px" }} />
-                </div>
-                <div style={{ margin: "24px" }}>
-                  <Button
-                    style={{ padding: "0px 36px" }}
-                    onClick={() => {
-                      document.getElementById("link-to-gallery").click();
-                    }}
-                    type="primary"
-                    shape="round"
-                    size="large"
-                  >
-                    Start Playing
-                  </Button>
-                </div>
+                <Row>
+                  <Col span={2} />
+                  <Col span={10}>
+                    <div style={{ marginTop: "20px", marginBottom: "64px" }}>
+                      <h2 className="title-label">
+                        <span className="title-text">Summon and Battle Ancient Warrior NFTs</span>
+                      </h2>
+                      <h5 className="title-subtitle">
+                        CryptoSouls are minted from metadata on IPFS. When a warrior is summoned / minted, it gets
+                        stats. All warrior types have the same chance of higher and lower stats.{" "}
+                      </h5>
+                    </div>
+                    <div style={{ margin: "24px" }}>
+                      <Button
+                        style={{ padding: "0px 36px" }}
+                        onClick={() => {
+                          document.getElementById("link-to-gallery").click();
+                        }}
+                        type="primary"
+                        shape="round"
+                        size="large"
+                      >
+                        Start Playing
+                      </Button>
+                    </div>
+                  </Col>
+                  <Col className="header-image-section" span={10}>
+                    <img className="header-image" alt="" src={headerImage} />
+                  </Col>
+                  <Col span={2} />
+                </Row>
               </div>
               <div
                 style={{
                   margin: "auto",
-                  marginTop: "40px",
-                  marginBottom: "40px",
+                  paddingTop: "32px",
+                  paddingBottom: "8px",
                   width: "100%",
                 }}
+                className="app-steps-master"
               >
                 <AppSteps />
+              </div>
+              <div
+                style={{
+                  margin: "auto",
+                  paddingTop: "32px",
+                  paddingBottom: "8px",
+                  width: "100%",
+                }}
+                className="warriors-home-page-master"
+              >
+                <Warriors />
+              </div>
+              <div
+                style={{
+                  margin: "auto",
+                  paddingTop: "32px",
+                  paddingBottom: "8px",
+                  width: "100%",
+                }}
+                className="faq-section"
+              >
                 <FAQ />
               </div>
             </div>

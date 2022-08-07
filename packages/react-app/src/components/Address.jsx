@@ -79,12 +79,7 @@ export default function Address(props) {
   if (props.onChange) {
     text = (
       <Text editable={{ onChange: props.onChange }} copyable={{ text: address }}>
-        <a
-          style={{ color: currentTheme === "light" ? "#222222" : "#ddd" }}
-          target="_blank"
-          href={etherscanLink}
-          rel="noopener noreferrer"
-        >
+        <a target="_blank" style={{ color: "#BBBCBD !important" }} href={etherscanLink} rel="noopener noreferrer">
           {displayAddress}
         </a>
       </Text>
@@ -93,7 +88,7 @@ export default function Address(props) {
     text = (
       <Text copyable={{ text: address }}>
         <a
-          style={{ color: currentTheme === "light" ? "#222222" : "#ddd" }}
+          style={{ color: "#BBBCBD !important", fontSize: "22px" }}
           target="_blank"
           href={etherscanLink}
           rel="noopener noreferrer"

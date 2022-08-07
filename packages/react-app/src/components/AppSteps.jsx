@@ -8,6 +8,7 @@ const trophyImage = "images/trophy.png";
 export default function AppSteps() {
   return (
     <div className="site-card-wrapper">
+      <h1 className="section-header-title">How It Works</h1>
       <Row gutter={16}>
         <Col span={8}>
           <Card
@@ -16,12 +17,14 @@ export default function AppSteps() {
                 alt="example"
                 src={soulImage}
                 style={{ objectFit: "contain", maxWidth: 200, padding: "10px", margin: "auto" }}
+                className="icon-circle"
               />
             }
             bordered={false}
+            className="step-card"
           >
             <h4>Summon Warriors as NFTs</h4>
-            <p>
+            <p className="app-step-card-description">
               CryptoSouls are minted with{" "}
               <a target="_blank" rel="noreferrer" href="https://chain.link/solutions/chainlink-vrf">
                 provably-random
@@ -36,13 +39,17 @@ export default function AppSteps() {
               <img
                 alt="example"
                 src={battleImage}
-                style={{ objectFit: "contain", maxWidth: 200, padding: "10px", margin: "auto" }}
+                style={{ objectFit: "contain !important", maxWidth: 200, padding: "10px", margin: "auto" }}
+                className="icon-circle"
               />
             }
             bordered={false}
+            className="step-card"
           >
             <h4>Clash in the Battle Arena</h4>
-            <p>Compete in the Battle Arena for glory and riches in one-on-one duels</p>
+            <p className="app-step-card-description">
+              Compete in the Battle Arena for glory and riches in one-on-one duels
+            </p>
           </Card>
         </Col>
         <Col span={8}>
@@ -52,12 +59,14 @@ export default function AppSteps() {
                 alt="example"
                 src={trophyImage}
                 style={{ objectFit: "contain", maxWidth: 200, padding: "10px", margin: "auto" }}
+                className="icon-circle"
               />
             }
             bordered={false}
+            className="step-card"
           >
             <h4>Defeat Rivals and Win Riches</h4>
-            <p>Win ETH from the Battle Arena and summon more CryptoSouls</p>
+            <p className="app-step-card-description">Win ETH from the Battle Arena and summon more CryptoSouls</p>
           </Card>
         </Col>
       </Row>

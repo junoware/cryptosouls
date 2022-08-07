@@ -10,10 +10,10 @@ export default function Header() {
     <span>
       <a href="./" rel="noopener noreferrer" style={{ float: "left" }}>
         <PageHeader
-          avatar={{ src: soulIcon, size: 60 }}
+          avatar={{ src: soulIcon, size: 40 }}
           title="CryptoSouls"
           subTitle=" "
-          style={{ cursor: "pointer" }}
+          style={{ cursor: "pointer", color: "#BBBCBD !important", fontWeight: "700px !important" }}
         />
       </a>
     </span>
