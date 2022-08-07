@@ -11,7 +11,7 @@ export default function Header() {
       <a href="./" rel="noopener noreferrer" style={{ float: "left" }}>
         <PageHeader
           avatar={{ src: soulIcon, size: 40 }}
-          title="CryptoSouls"
+          title="Souls Arena"
           subTitle=" "
           style={{ cursor: "pointer", color: "#BBBCBD !important", fontWeight: "700px !important" }}
         />

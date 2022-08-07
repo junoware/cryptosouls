@@ -574,22 +574,22 @@ function App(props) {
                   <Col span={10}>
                     <div style={{ marginTop: "20px", marginBottom: "64px" }}>
                       <h2 className="title-label">
-                        <span className="title-text">Summon and Battle Ancient Warrior NFTs</span>
+                        <span className="title-text">Summon & Battle Powerful NFT Warriors</span>
                       </h2>
                       <h5 className="title-subtitle">
-                        CryptoSouls are minted from metadata on IPFS. When a warrior is summoned / minted, it gets
-                        stats. All warrior types have the same chance of higher and lower stats.{" "}
+                        Soul warriors are minted from metadata on IPFS. When a Soul is minted, it gets stats. All
+                        warrior types have the same chance of higher and lower stats.
                       </h5>
                     </div>
-                    <div style={{ margin: "24px" }}>
+                    <div style={{ margin: "24px 0px" }}>
                       <Button
                         style={{ padding: "0px 36px" }}
                         onClick={() => {
                           document.getElementById("link-to-gallery").click();
                         }}
-                        type="primary"
                         shape="round"
                         size="large"
+                        className="start-playing-button"
                       >
                         Start Playing
                       </Button>
@@ -647,7 +647,7 @@ function App(props) {
             <br />
             <h1>Gallery</h1>
             <br />
-            <h6>CryptoSouls are minted from metadata on IPFS. When a warrior is summoned / minted, it gets stats. </h6>
+            <h6>Souls are minted from metadata on IPFS. When a warrior is summoned / minted, it gets stats. </h6>
             <h6>
               All warrior types have the <u>same chance</u> of higher <b>and</b> lower stats.
             </h6>

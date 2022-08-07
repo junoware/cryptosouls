@@ -6,3 +6,8 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+@font-face {
+  font-family: "Clash Display";
+  src: local("Clash Display"), url(./fonts/ClashDisplay/ClashDisplay-Semibold.otf) format("truetype");
+}

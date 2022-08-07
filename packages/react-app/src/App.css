@@ -140,7 +140,7 @@ a {
     width: 60%;
     margin: auto;
     margin-top: 0px !important;
-    margin-bottom: 40px;
+    margin-bottom: 80px;
 }
 
 .page-footer-master {
@@ -193,7 +193,7 @@ a {
 }
 
 .header-image {
-  height: 500px;
+  height: 600px;
   width: auto;
 }
 
@@ -238,7 +238,7 @@ a {
   width: auto;
   margin: auto;
   margin-top: 90px;
-  opacity: 30%;
+  opacity: 100%;
 }
 
 .underline-div {
@@ -247,4 +247,23 @@ a {
   background: #D9D9D9;
   border-radius: 24px;
   margin-top: -10px;
+}
+
+.start-playing-button {
+  width: 207.86px;
+  height: 62px !important;
+  background: #AEEEED !important;
+  border-radius: 60px !important;
+  font-family: "Poppins" !important;
+  font-style: normal !important;
+  font-weight: 600 !important;
+  font-size: 20px !important;
+  line-height: 36px;
+  align-items: center;
+  color: #000000 !important;
+  border: 0px !important;
+}
+
+.carousel-description {
+  text-align: left;
 }

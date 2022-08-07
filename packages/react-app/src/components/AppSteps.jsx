@@ -25,7 +25,7 @@ export default function AppSteps() {
           >
             <h4>Summon Warriors as NFTs</h4>
             <p className="app-step-card-description">
-              CryptoSouls are minted with{" "}
+              Souls are minted with{" "}
               <a target="_blank" rel="noreferrer" href="https://chain.link/solutions/chainlink-vrf">
                 provably-random
               </a>{" "}
@@ -66,7 +66,7 @@ export default function AppSteps() {
             className="step-card"
           >
             <h4>Defeat Rivals and Win Riches</h4>
-            <p className="app-step-card-description">Win ETH from the Battle Arena and summon more CryptoSouls</p>
+            <p className="app-step-card-description">Win ETH from the Battle Arena and summon more Souls</p>
           </Card>
         </Col>
       </Row>
