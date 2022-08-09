@@ -577,7 +577,7 @@ function App(props) {
                         <span className="title-text">Summon & Battle Powerful NFT Warriors</span>
                       </h2>
                       <h5 className="title-subtitle">
-                        Soul NFTs are Minted from Metadata on IPFS and given Provably-Random stats for Battle
+                        Soul NFTs are Minted from Metadata on IPFS and given Provably-Random Stats for Battle
                       </h5>
                     </div>
                     <div style={{ margin: "24px 0px" }}>
