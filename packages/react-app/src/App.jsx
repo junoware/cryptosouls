@@ -577,8 +577,7 @@ function App(props) {
                         <span className="title-text">Summon & Battle Powerful NFT Warriors</span>
                       </h2>
                       <h5 className="title-subtitle">
-                        Soul Warriors are minted from metadata on IPFS. When a Soul is minted, it gets stats. All
-                        warrior types have the same chance of higher and lower stats.
+                        Soul NFTs are Minted from Metadata on IPFS and given Provably-Random stats for Battle
                       </h5>
                     </div>
                     <div style={{ margin: "24px 0px" }}>
@@ -618,6 +617,7 @@ function App(props) {
                   paddingTop: "32px",
                   paddingBottom: "8px",
                   width: "100%",
+                  marginBottom: 64,
                 }}
                 className="warriors-home-page-master"
               >

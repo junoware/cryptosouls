@@ -34,7 +34,10 @@ export default function Warriors() {
             </Col>
             <Col span={descriptionCellSpan} className="carousel-info-section">
               <h3 style={contentStyle}>Genghis Khan</h3>
-              <p className="carousel-description">Though mild in manner, he was very fierce in battle.</p>
+              <p className="carousel-description">
+                The founder and first Great Khan of the Mongol Empire, the largest contiguous empire in history. His
+                exceptional military successes made Genghis Khan one of the most important conquerors of all time.
+              </p>
             </Col>
           </Row>
         </div>
@@ -45,7 +48,11 @@ export default function Warriors() {
             </Col>
             <Col span={descriptionCellSpan} className="carousel-info-section">
               <h3 style={contentStyle}>Musashi</h3>
-              <p className="carousel-description">Though mild in manner, he was very fierce in battle.</p>
+              <p className="carousel-description">
+                A swordsman, philosopher, strategist, writer and ronin, who became renowned through stories of his
+                unique double-bladed swordsmanship and undefeated record in 61 duels. Musashi is considered a Kensei, a
+                sword-saint of Japan.
+              </p>
             </Col>
           </Row>
         </div>
@@ -56,7 +63,10 @@ export default function Warriors() {
             </Col>
             <Col span={descriptionCellSpan} className="carousel-info-section">
               <h3 style={contentStyle}>William Wallace</h3>
-              <p className="carousel-description">Though mild in manner, he was very fierce in battle.</p>
+              <p className="carousel-description">
+                One of the main leaders during the First War of Scottish Independence. He was appointed Guardian of
+                Scotland and served until his defeat at the Battle of Falkirk in July 1298.
+              </p>
             </Col>
           </Row>
         </div>
@@ -67,7 +77,11 @@ export default function Warriors() {
             </Col>
             <Col span={descriptionCellSpan} className="carousel-info-section">
               <h3 style={contentStyle}>Achilles</h3>
-              <p className="carousel-description">Though mild in manner, he was very fierce in battle.</p>
+              <p className="carousel-description">
+                Hero of the Trojan War and the greatest of all the Greek warriors. Legends state that Achilles was
+                invulnerable except for one heel, because when his mother Thetis dipped him in the river Styx as an
+                infant, she held him by one of his heels.
+              </p>
             </Col>
           </Row>
         </div>
