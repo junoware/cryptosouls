@@ -23,14 +23,8 @@ export default function AppSteps() {
             bordered={false}
             className="step-card"
           >
-            <h4>Summon Warriors as NFTs</h4>
-            <p className="app-step-card-description">
-              Souls are minted with{" "}
-              <a target="_blank" rel="noreferrer" href="https://chain.link/solutions/chainlink-vrf">
-                provably-random
-              </a>{" "}
-              stats and ready for battle
-            </p>
+            <h4>Mint NFT Souls</h4>
+            <p className="app-step-card-description">Minted with Provably-Random Stats for Battle</p>
           </Card>
         </Col>
         <Col span={8}>
@@ -46,10 +40,8 @@ export default function AppSteps() {
             bordered={false}
             className="step-card"
           >
-            <h4>Clash in the Battle Arena</h4>
-            <p className="app-step-card-description">
-              Compete in the Battle Arena for glory and riches in one-on-one duels
-            </p>
+            <h4>Battle in the Arena</h4>
+            <p className="app-step-card-description">Pit your Souls against Others for Prizes</p>
           </Card>
         </Col>
         <Col span={8}>
@@ -65,8 +57,8 @@ export default function AppSteps() {
             bordered={false}
             className="step-card"
           >
-            <h4>Defeat Rivals and Win Riches</h4>
-            <p className="app-step-card-description">Win ETH from the Battle Arena and summon more Souls</p>
+            <h4>Win Bounties</h4>
+            <p className="app-step-card-description">Victorious Souls are Rewarded with Tokens</p>
           </Card>
         </Col>
       </Row>
