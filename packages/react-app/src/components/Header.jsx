@@ -13,7 +13,7 @@ export default function Header() {
           avatar={{ src: soulIcon, size: 40 }}
           title="Souls Arena"
           subTitle=" "
-          style={{ cursor: "pointer", color: "#BBBCBD !important", fontWeight: "700px !important" }}
+          style={{ cursor: "pointer", color: "#BBBCBD !important", fontWeight: "400px !important" }}
         />
       </a>
     </span>

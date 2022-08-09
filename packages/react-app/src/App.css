@@ -35,8 +35,8 @@ body {
   font-family: "Clash Display", sans-serif;
   font-style: normal;
   font-weight: 500;
-  font-size: 80px;
-  line-height: 78px;
+  font-size: 40px;
+  line-height: 40px;
   /* or 90% */
   display: flex;
   align-items: center;
@@ -118,7 +118,7 @@ a {
 }
 
 .faq-section {
-  width: 65%;
+  width: 100%;
   margin: auto;
 }
 
@@ -134,13 +134,6 @@ a {
   background: linear-gradient(0deg, rgba(16, 16, 16, 0.7), rgba(16, 16, 16, 0.7)), url("/images/main-bg-image.png");
   background-size: cover;
   text-align: left;
-}
-
-.site-card-wrapper {
-    width: 60%;
-    margin: auto;
-    margin-top: 0px !important;
-    margin-bottom: 80px;
 }
 
 .page-footer-master {
@@ -193,7 +186,7 @@ a {
 }
 
 .header-image {
-  height: 600px;
+  height: 300px;
   width: auto;
 }
 
@@ -234,11 +227,7 @@ a {
 }
 
 .faq-image {
-  height: 400px;
-  width: auto;
-  margin: auto;
-  margin-top: 90px;
-  opacity: 0.25;
+  display: none;
 }
 
 .underline-div {
@@ -254,7 +243,6 @@ a {
   height: 62px !important;
   background: #AEEEED !important;
   border-radius: 60px !important;
-  font-family: "Poppins" !important;
   font-style: normal !important;
   font-weight: 600 !important;
   font-size: 20px !important;
@@ -264,6 +252,64 @@ a {
   border: 0px !important;
 }
 
+.start-playing-button span {
+  font-family: "Poppins";
+  font-weight: 400 !important;
+  font-style: normal !important;
+}
+
 .carousel-description {
   text-align: left;
+}
+
+.site-card-wrapper {
+  width: 90%;
+  margin: auto;
+  margin-bottom: 160px;
+}
+
+.title-subtitle {
+  font-family: 'Radley';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 24px;
+  line-height: 34px;
+  /* or 131% */
+
+  display: flex;
+  align-items: center;
+
+  color: #B7B7B7;
+}
+
+@media (min-width: 1100px) {
+  .site-card-wrapper {
+    width: 60%;
+    margin: auto;
+    margin-top: 0px !important;
+    margin-bottom: 80px;
+  }
+
+  .faq-section {
+    width: 65%;
+    margin: auto;
+  }
+
+  .faq-image {
+    display: block;
+    height: 400px;
+    width: auto;
+    margin: auto;
+    margin-top: 90px;
+    opacity: 0.25;
+  }
+
+  .title-text {
+    font-size: 80px;
+    line-height: 78px;
+  }
+
+  .header-image {
+    height: 600px;
+  }
 }

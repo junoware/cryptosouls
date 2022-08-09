@@ -1,7 +1,7 @@
 {
-  "short_name": "🏗 Scaffold-Eth App",
+  "short_name": "Will3",
   "start_url": ".",
-  "name": "🏗 Scaffold-Eth App",
+  "name": "Will3",
   "icons": [
     {
       "src": "favicon.ico",
@@ -9,17 +9,16 @@
       "type": "image/x-icon"
     },
     {
-      "src": "soul.svg",
+      "src": "soul.png",
       "type": "image/svg",
       "sizes": "192x192"
     },
     {
-      "src": "soul.svg",
+      "src": "soul.png",
       "type": "image/svg",
       "sizes": "512x512"
     }
   ],
-  "start_url": ".",
   "display": "standalone",
   "theme_color": "#000000",
   "background_color": "#ffffff"

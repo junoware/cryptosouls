@@ -32,7 +32,7 @@ export default function Warriors() {
             <Col span={warriorCellSpan}>
               <img className="carousel-warrior" src={warrior1Image} alt="" />
             </Col>
-            <Col span={descriptionCellSpan}>
+            <Col span={descriptionCellSpan} className="carousel-info-section">
               <h3 style={contentStyle}>Genghis Khan</h3>
               <p className="carousel-description">Though mild in manner, he was very fierce in battle.</p>
             </Col>
@@ -43,7 +43,7 @@ export default function Warriors() {
             <Col span={warriorCellSpan}>
               <img className="carousel-warrior" src={warrior2Image} alt="" />
             </Col>
-            <Col span={descriptionCellSpan}>
+            <Col span={descriptionCellSpan} className="carousel-info-section">
               <h3 style={contentStyle}>Musashi</h3>
               <p className="carousel-description">Though mild in manner, he was very fierce in battle.</p>
             </Col>
@@ -54,7 +54,7 @@ export default function Warriors() {
             <Col span={warriorCellSpan}>
               <img className="carousel-warrior" src={warrior3Image} alt="" />
             </Col>
-            <Col span={descriptionCellSpan}>
+            <Col span={descriptionCellSpan} className="carousel-info-section">
               <h3 style={contentStyle}>William Wallace</h3>
               <p className="carousel-description">Though mild in manner, he was very fierce in battle.</p>
             </Col>
@@ -65,7 +65,7 @@ export default function Warriors() {
             <Col span={warriorCellSpan}>
               <img className="carousel-warrior" src={warrior4Image} alt="" />
             </Col>
-            <Col span={descriptionCellSpan}>
+            <Col span={descriptionCellSpan} className="carousel-info-section">
               <h3 style={contentStyle}>Achilles</h3>
               <p className="carousel-description">Though mild in manner, he was very fierce in battle.</p>
             </Col>

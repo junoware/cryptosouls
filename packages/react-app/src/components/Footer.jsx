@@ -19,8 +19,8 @@ export default function Footer() {
         <Col span={5} style={{ margin: "auto" }}>
           <div className="left-align">Email Address</div>
           <h6 className="left-align">
-            <a className="footer-link" href="mailto:contact@cryptosouls.com">
-              contact@cryptosouls.com
+            <a className="footer-link" href="mailto:contact@soulsarena.com">
+              contact@soulsarena.com
             </a>
           </h6>
         </Col>
