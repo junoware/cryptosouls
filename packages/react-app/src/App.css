@@ -325,4 +325,8 @@ a {
   .slick-dots-bottom {
     bottom: -44px !important;
   }
+
+  .carousel-warrior {
+    margin-right: -10px !important;
+  }
 }

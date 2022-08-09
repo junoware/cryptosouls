@@ -42,8 +42,8 @@ export default function Footer() {
       <div style={{ marginBottom: 24 }}>
         <a href="https://discord.gg/yHQWAnp6Y5" rel="noreferrer" target="_blank">
           <img style={{ padding: "0px 4px" }} alt="discord" height={30} src={discordIcon} />
-        </a>{" "}
-        <a href="https://twitter.com/cryptosoulsnfts" rel="noreferrer" target="_blank">
+        </a>
+        <a href="https://twitter.com/soulsarena" rel="noreferrer" target="_blank">
           <img style={{ padding: "0px 4px" }} alt="twitter" height={25} src={twitterIcon} />
         </a>
       </div>
