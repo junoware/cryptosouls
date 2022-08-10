@@ -576,10 +576,7 @@ function App(props) {
                       <h2 className="title-label">
                         <span className="title-text">Mint & Battle Ancient NFT Warriors</span>
                       </h2>
-                      <h5 className="title-subtitle">
-                        Mint NFTs of the Souls of Ancient Warriors and Battle Against Others for the Chance to Win
-                        Prizes
-                      </h5>
+                      <h5 className="title-subtitle">Mint NFTs and Battle others for the chance to Win Prizes</h5>
                     </div>
                     <div style={{ margin: "24px 0px" }}>
                       <Button
