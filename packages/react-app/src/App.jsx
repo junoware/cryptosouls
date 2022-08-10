@@ -574,10 +574,11 @@ function App(props) {
                   <Col span={10}>
                     <div style={{ marginTop: "20px", marginBottom: "64px" }}>
                       <h2 className="title-label">
-                        <span className="title-text">Summon & Battle Powerful NFT Warriors</span>
+                        <span className="title-text">Mint & Battle Ancient NFT Warriors</span>
                       </h2>
                       <h5 className="title-subtitle">
-                        Soul NFTs are Minted from Metadata on IPFS and given Provably-Random Stats for Battle
+                        Mint NFTs of the Souls of Ancient Warriors and Battle Against Others for the Chance to Win
+                        Prizes
                       </h5>
                     </div>
                     <div style={{ margin: "24px 0px" }}>

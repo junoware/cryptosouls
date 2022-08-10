@@ -36,7 +36,7 @@ export default function Warriors() {
               <h3 style={contentStyle}>Genghis Khan</h3>
               <p className="carousel-description">
                 The founder and first Great Khan of the Mongol Empire, the largest contiguous empire in history. His
-                exceptional military successes made Genghis Khan one of the most important conquerors of all time.
+                exceptional military successes make him one of the most important conquerors of all time.
               </p>
             </Col>
           </Row>
